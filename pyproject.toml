@@ -89,6 +89,10 @@ ignore = [
 # závislostem. Na čitelnost výsledků to vliv nemá.
 "scripts/*.py" = ["E402", "E701", "E702", "E741", "SIM", "B"]
 "experiments/*.py" = ["E402"]
+# Kaskádová pipeline je přenesena z vyhodnocovacího skriptu beze změny — právě
+# tento kód dal výsledky uvedené v práci. Přepisovat jej kvůli stylu by vazbu
+# na měření oslabilo, proto zde platí stejné výjimky jako pro dávkové skripty.
+"src/core/cascade.py" = ["E402", "E701", "E702", "E741", "SIM"]
 # Notebooky načítají styl hvězdičkovým importem záměrně — zkracuje to buňky
 # a jde o report, ne o knihovnu. Import thesis_style navíc musí následovat až
 # po úpravě sys.path, takže jej nelze seřadit mezi ostatní (I001).

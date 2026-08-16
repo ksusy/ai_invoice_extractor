@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from src.api.routes.extract import router as extract_router
 from src.api.routes.results import router as results_router
 from src.api.routes.upload import router as upload_router
 from src.config.settings import get_settings
@@ -51,6 +52,9 @@ def create_app() -> FastAPI:
         return {"status": "ok"}
 
     # -- Register routers --
+    # Kaskádová pipeline vyhodnocená v práci; ostatní cesty jsou starší,
+    # databázově orientovaný postup zpracování.
+    app.include_router(extract_router, prefix="/api/v1")
     app.include_router(upload_router, prefix="/api/v1")
     app.include_router(results_router, prefix="/api/v1")
 

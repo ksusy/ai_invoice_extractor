@@ -120,9 +120,18 @@ protože do ní ukládá průběh zpracování. Kolidují-li porty s něčím na
 API_PORT=8010 NOTEBOOK_PORT=8899 docker compose up api
 ```
 
-> **REST API je demonstrační integrace, ne vyhodnocená pipeline.** Výsledky
-> uvedené v práci pochází ze `scripts/run_ds1_final.py`; API používá vlastní,
-> jednodušší extrakční cestu a jeho přesnost nebyla měřena.
+API i dávkové zpracování běží na **témže kódu** — kaskáda je ve sdíleném
+modulu [`src/core/cascade.py`](src/core/cascade.py), který volá jak
+`scripts/run_ds1_final.py`, tak koncový bod `POST /api/v1/extract/`. Čísla
+uvedená v práci tedy odpovídají tomu, co systém v provozu skutečně dělá.
+
+```bash
+curl -X POST http://localhost:8000/api/v1/extract/      -F "file=@faktura.pdf" -F "commodity=elektrina_nn"
+```
+
+Odpověď obsahuje extrahovaná pole, jistotu modelu po jednotlivých polích,
+použitou cestu (`text` / `vision`), náklady a nalezené nesrovnalosti ve formátu
+i v součtech. Komoditu je vhodné zadat — v KEM ji uživatel při nahrání zná.
 
 ### Lokálně
 
