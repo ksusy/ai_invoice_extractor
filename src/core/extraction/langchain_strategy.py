@@ -1035,13 +1035,14 @@ Return a valid JSON object with the extracted data. Use null for missing fields.
                 regex = RegexExtractionStrategy()
                 commodity = regex._detect_commodity(context.raw_text)
 
+            # Nezdařená detekce není důvod skončit — jazykový model dokáže
+            # komoditu určit sám z obsahu. Volba se proto jen zaznamená jako
+            # varování, stejně jako u extrakce s upřesněným schématem níže.
             if not commodity:
-                errors.append("Could not detect commodity type from text")
-                return ExtractionResult(
-                    source_file=context.source_filename,
-                    strategy_name=self.name,
-                    raw_text=context.raw_text,
-                    errors=errors,
+                commodity = CommodityType.ELEKTRINA_NN
+                warnings.append(
+                    "Could not detect commodity type from text — defaulting to "
+                    "electricity NN; verify the commodity in the result"
                 )
 
             # Few-shot RAG (n=2): inject similar correctly-extracted examples,

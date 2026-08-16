@@ -151,30 +151,38 @@ PATTERNS = {
 # Zkratky komodit (NN, VN, MO, VO) musí být ohraničené hranicí slova. Bez ní
 # se „VO“ shoduje uvnitř slova „voda“ nebo „vodné“ a faktura za vodu je pak
 # chybně klasifikována jako plyn velkoodběr.
+# Vzory hledají kmen slova, ne jeho základní tvar: na fakturách se komodita
+# vyskytuje skloňovaná („Dodávka elektřiny“, „za teplo“), takže tvar „elektřina“
+# by se netrefil. Kromě názvu se hledá i jednotka — tam, kde název chybí
+# (typicky syntetická sada DS3), je jednotka jediným vodítkem.
 COMMODITY_PATTERNS = {
     CommodityType.ELEKTRINA_NN: [
-        r"(?i)elektřina|elektrina|elektrická\s+energie|silová\s+elektřina",
+        r"(?i)elektřin|elektrin|elektrick\w*\s+energi|silov\w*\s+elektřin",
         r"(?i)nízké\s+napětí|nn|low\s+voltage",
         r"(?i)distribuční\s+tarif\s*[:\-]?\s*D\d{2}",
+        r"(?i)kWh",
+        r"(?i)vysoký\s+tarif|nízký\s+tarif",
     ],
     CommodityType.ELEKTRINA_VN: [
         r"(?i)vysoké\s+napětí|vn|high\s+voltage",
         r"(?i)rezervovaná\s+kapacita",
     ],
     CommodityType.PLYN_MO: [
-        r"(?i)plyn|zemní\s+plyn|natural\s+gas",
+        r"(?i)\bplyn\w*|zemn\w*\s+plyn|natural\s+gas",
         r"(?i)maloodběr|MO",
+        r"(?i)spalné\s+teplo|objemový\s+koeficient",
     ],
     CommodityType.PLYN_VO: [
         r"(?i)velkoodběr|VO",
     ],
     CommodityType.TEPLO: [
-        r"(?i)teplo|dálkové\s+vytápění|district\s+heat",
-        r"(?i)GJ|gigajoul",
+        r"(?i)\btepl[aou]\b|tepeln\w*\s+energi|dálkov\w*\s+vytápění|district\s+heat",
+        r"(?i)GJ|gigajoul",
     ],
     CommodityType.VODA: [
-        r"(?i)voda|vodné|stočné|water",
+        r"(?i)\bvod[aouy]\b|vodné|vodného|stočné|stočného|water",
         r"(?i)vodovod|kanalizace",
+        r"(?i)pitná\s+voda|odpadní\s+voda|srážková",
     ],
 }
 

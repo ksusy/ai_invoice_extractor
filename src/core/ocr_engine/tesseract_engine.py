@@ -89,10 +89,13 @@ class TesseractEngine(BaseOCREngine):
         self._config = config
         self._tesseract_cmd = tesseract_cmd
         self._layout_format = layout_format
-        # Configure once at init (not per-call)
-        if tesseract_cmd:
-            pytesseract, _ = _import_dependencies()
-            pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+        # Configure once at init (not per-call). Bez explicitní cesty se
+        # spustitelný soubor dohledá — na Linuxu a v kontejneru z PATH, na
+        # Windows z obvyklého umístění instalátoru. Bez toho by OCR na Windows
+        # tiše vracelo prázdný text.
+        from src.core.ocr_engine.tesseract_setup import nastav_tesseract
+
+        nastav_tesseract(tesseract_cmd)
 
     @property
     def name(self) -> str:
