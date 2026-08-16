@@ -1,0 +1,4 @@
+﻿prompt_language,F1_mean,F1_median,F1_std,Precision_mean,Recall_mean,NullRate_mean,Tokens_mean,Cost_USD_per_doc,F1_prumer
+en,0.5407,0.6,0.3013,0.4385,0.7575,0.061,4417.0611,0.0007,0.5407
+cs_en,0.5401,0.6,0.3028,0.4417,0.7565,0.0641,4430.4685,0.0007,0.5401
+cs,0.5361,0.6,0.2966,0.4364,0.7555,0.072,4800.0315,0.0008,0.5361

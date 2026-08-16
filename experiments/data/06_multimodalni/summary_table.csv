@@ -1,0 +1,25 @@
+﻿Model,Podmínka,Makro-F1,Precision,Recall,Latence [ms],Náklady [USD],Průměr tokenů (vstup)
+gpt-4.1-mini,grayscale_denoise_en_standard,0.733,0.610,0.960,2801,$0.0881,3231
+gpt-4.1-mini,grayscale_denoise_cs_standard,0.732,0.610,0.960,3393,$0.0906,3336
+gpt-4.1-mini,raw_cs_standard,0.728,0.603,0.960,4868,$0.0906,3336
+gpt-4.1-mini,raw_en_standard,0.727,0.603,0.959,7872,$0.0881,3231
+gpt-4.1-mini,grayscale_denoise_en_cot,0.710,0.589,0.960,5380,$0.1099,3261
+gpt-4.1-mini,raw_en_cot,0.704,0.585,0.951,6948,$0.1103,3261
+gpt-4.1,grayscale_denoise_en_cot,0.687,0.564,0.951,3470,$0.3352,1439
+gpt-4.1-mini,grayscale_denoise_cs_cot,0.686,0.573,0.921,7070,$0.1133,3388
+gpt-4.1-mini,raw_cs_cot,0.684,0.572,0.917,8568,$0.1131,3388
+gpt-4.1,grayscale_denoise_cs_cot,0.677,0.555,0.950,3350,$0.3461,1566
+gpt-4.1,raw_cs_cot,0.659,0.538,0.946,8452,$0.3472,1566
+gpt-4.1,grayscale_denoise_cs_standard,0.659,0.547,0.887,4046,$0.2326,1514
+gpt-4.1,grayscale_denoise_en_standard,0.658,0.552,0.861,2812,$0.2209,1409
+gpt-4.1,raw_en_cot,0.655,0.531,0.950,4779,$0.3348,1439
+gpt-4.1,raw_en_standard,0.615,0.511,0.838,6247,$0.2208,1409
+gpt-4o-mini,grayscale_denoise_cs_cot,0.613,0.496,0.898,7538,$0.3483,37296
+gpt-4.1,raw_cs_standard,0.603,0.519,0.776,3666,$0.2327,1514
+gpt-4o-mini,raw_cs_cot,0.596,0.481,0.900,10753,$0.3483,37296
+gpt-4o-mini,grayscale_denoise_cs_standard,0.570,0.449,0.872,4263,$0.3391,37244
+gpt-4o-mini,grayscale_denoise_en_standard,0.564,0.441,0.876,3255,$0.3381,37139
+gpt-4o-mini,raw_cs_standard,0.562,0.435,0.890,4661,$0.3391,37244
+gpt-4o-mini,grayscale_denoise_en_cot,0.559,0.441,0.902,5838,$0.3456,37169
+gpt-4o-mini,raw_en_standard,0.543,0.416,0.890,6501,$0.3382,37139
+gpt-4o-mini,raw_en_cot,0.525,0.399,0.910,8278,$0.3454,37169

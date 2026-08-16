@@ -1,0 +1,52 @@
+# ── Archiv ───────────────────────────────────────────────────────
+# Pracovní materiály, starší iterace experimentů a surové výstupy běhů.
+# Zůstávají lokálně, do repozitáře nepatří.
+_archive/
+
+# ── Python ───────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+
+# ── Prostředí a klíče ────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Databáze a logy z běhů ───────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# ── Faktury s osobními údaji ─────────────────────────────────────
+# Reálné faktury (DS1, DS2, referenční korpus) se nikdy necommitují. Totéž
+# platí pro jejich ground truth — obsahuje IČO odběratelů, kódy odběrných míst
+# a fakturované částky. Obojí je uloženo na Google Disku, viz data/README.md.
+data/ds1/
+data/ds2/
+data/sorted/
+data/80195/
+data/retrieval/
+
+# Syntetická sada DS3 je součástí repozitáře (fiktivní dodavatelé, žádné osobní údaje).
+
+# ── Jupyter ──────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── IDE a nástroje ───────────────────────────────────────────────
+.vscode/
+.claude/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

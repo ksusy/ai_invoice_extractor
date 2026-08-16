@@ -1,0 +1,37 @@
+{
+  "generated": "2026-07-06T02:30:22",
+  "ocr_config": "--psm 4 --oem 3 -l ces",
+  "dpi": 300,
+  "max_pages": null,
+  "pipelines": [
+    "P0_baseline",
+    "P1_gray",
+    "P2_gray_otsu",
+    "P3_gray_adaptive",
+    "P4_gray_denoise",
+    "P5_gray_clahe",
+    "P6_gray_denoise_otsu",
+    "P7_gray_clahe_denoise",
+    "P8_clahe_den_desk_otsu"
+  ],
+  "n_docs_eval": 180,
+  "n_docs_complete": 180,
+  "n_pairs": 1711,
+  "n_field_rows": 22550,
+  "files": {
+    "doc_csv": "preproc_v2_doc.csv",
+    "field_csv": "preproc_v2_field.csv",
+    "summary": "preproc_v2_summary.csv",
+    "bootstrap_ci": "preproc_v2_bootstrap_ci.csv",
+    "per_field": "preproc_v2_per_field.csv",
+    "posthoc": "preproc_v2_posthoc.csv",
+    "figures": [
+      "v2_00_gt_field_coverage.png",
+      "v2_01_pipeline_preview.png",
+      "v2_02_kie_by_pipeline.png",
+      "v2_03_kie_heatmaps.png",
+      "v2_04_cer_layout_time.png",
+      "v2_05_conf_vs_kie.png"
+    ]
+  }
+}

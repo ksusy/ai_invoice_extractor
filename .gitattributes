@@ -1,0 +1,14 @@
+# Textové soubory se v repozitáři ukládají s LF bez ohledu na operační systém.
+* text=auto eol=lf
+
+# Binární soubory se nikdy nepřevádějí.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.db binary
+
+# Notebooky se do statistik jazyků nezapočítávají a v diffu se sbalí.
+*.ipynb linguist-documentation
+
+# Skripty pro kontejner musí mít LF i na Windows.
+docker/*.sh text eol=lf

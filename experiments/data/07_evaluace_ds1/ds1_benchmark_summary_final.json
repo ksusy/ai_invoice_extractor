@@ -1,0 +1,210 @@
+{
+  "benchmark": "DS1 Final Evaluation — no post-processing (Fix3 removed), null==0 scoring",
+  "derived_from": "ds1_benchmark_full_v3.jsonl (frozen extractions; no re-run)",
+  "config": {
+    "primary_model": "gpt-4.1-2025-04-14",
+    "fallback_model": "gpt-4.1-mini",
+    "lie_format": "json_light",
+    "post_processing_fix3_vat_correction": false,
+    "scoring_null_equals_zero": true,
+    "numeric_rounding_tolerance": false
+  },
+  "n_invoices": 573,
+  "n_escalated": 88,
+  "escalation_rate": 0.1536,
+  "macro_f1": 0.8466,
+  "precision": 0.81,
+  "recall": 0.9062,
+  "total_cost_usd": 17.3919,
+  "cost_per_doc_usd": 0.030352,
+  "latency": {
+    "ocr_only_ms_mean": 12738.9,
+    "full_pipeline_ms_mean": 18403.8,
+    "text_llm_ms_mean": 4211.9,
+    "vision_llm_ms_mean_escalated": 9461.1
+  },
+  "json_validity_rate": 1.0,
+  "amount_inc_vat_accuracy": 0.5752,
+  "due_date_accuracy": 0.7104,
+  "null_eq_zero_flips_total": 195,
+  "field_accuracy": {
+    "amount_ex_vat": 0.6183,
+    "amount_inc_vat": 0.5752,
+    "annual_reserved_capacity": 0.5333,
+    "annual_reserved_capacity_charge": 0.1333,
+    "combustion_heat": 0.9818,
+    "commodity_price": 0.5577,
+    "consumption_gj": 0.6338,
+    "consumption_high_tariff": 0.7031,
+    "consumption_low_tariff": 0.8562,
+    "consumption_m3": 0.6842,
+    "consumption_mwh": 0.8701,
+    "consumption_point_code": 0.6906,
+    "consumption_srazkove_m3": 0.175,
+    "consumption_stocne_m3": 0.5455,
+    "consumption_vodne_m3": 0.6364,
+    "conversion_coefficient": 0.9038,
+    "customer_tax_id": 0.9381,
+    "distribution_price": 0.0566,
+    "due_date": 0.7104,
+    "gas_tax_total": 0.8909,
+    "grid_usage_charge": 0.0667,
+    "grid_usage_rate": 0.0667,
+    "hot_water_consumption": 0.56,
+    "invoice_number": 0.9442,
+    "issue_date": 0.8631,
+    "market_operator_fee": 0.8727,
+    "monthly_reserved_capacity": 0.6667,
+    "monthly_reserved_capacity_charge": 0.5333,
+    "operating_price": 0.2,
+    "period_from": 0.9821,
+    "period_to": 0.9768,
+    "power_factor": 0.3333,
+    "quarter_hour_max": 0.5333,
+    "reactive_power_charge": 0.8,
+    "reactive_power_quantity": 0.7333,
+    "reactive_power_rate": 0.6,
+    "renewable_energy_fee": 0.2667,
+    "reserved_capacity": 0.55,
+    "reserved_capacity_excess": 0.8667,
+    "reserved_capacity_excess_rate": 0.7333,
+    "reserved_capacity_price": 0.0,
+    "service_price": 0.2,
+    "standing_charge": 0.6429,
+    "supplementary_water": 0.7647,
+    "supplier_tax_id": 0.9691,
+    "supply_charge": 0.1333,
+    "supply_consumption": 1.0,
+    "supply_tax_charge": 0.35,
+    "tax_point_date": 0.7738,
+    "total_consumption": 0.5469,
+    "total_heat_consumption": 0.1622,
+    "unit_price_commodity": 0.3774,
+    "unit_price_distribution": 0.0962,
+    "unit_price_reserved_capacity": 0.0,
+    "unit_price_standing_charge": 0.6429
+  },
+  "by_commodity": {
+    "elektrina_nn": {
+      "N": 320,
+      "F1": 0.8477,
+      "Precision": 0.8063,
+      "Recall": 0.9111,
+      "Null": 0.0846
+    },
+    "elektrina_vn": {
+      "N": 45,
+      "F1": 0.7736,
+      "Precision": 0.7584,
+      "Recall": 0.813,
+      "Null": 0.3684
+    },
+    "plyn_mo": {
+      "N": 55,
+      "F1": 0.8766,
+      "Precision": 0.8745,
+      "Recall": 0.8894,
+      "Null": 0.1753
+    },
+    "plyn_vo": {
+      "N": 23,
+      "F1": 0.8581,
+      "Precision": 0.7708,
+      "Recall": 0.9843,
+      "Null": 0.1843
+    },
+    "teplo": {
+      "N": 75,
+      "F1": 0.848,
+      "Precision": 0.8155,
+      "Recall": 0.9083,
+      "Null": 0.2329
+    },
+    "voda": {
+      "N": 55,
+      "F1": 0.8635,
+      "Precision": 0.8187,
+      "Recall": 0.9357,
+      "Null": 0.1248
+    }
+  },
+  "by_quality": {
+    "Q1": {
+      "N": 288,
+      "F1": 0.8802
+    },
+    "Q2": {
+      "N": 202,
+      "F1": 0.8286
+    },
+    "Q3": {
+      "N": 83,
+      "F1": 0.7744
+    }
+  },
+  "acceptance_criteria": [
+    {
+      "id": "K1",
+      "criterion": "Macro F1 >= 0.60",
+      "threshold": 0.6,
+      "value": 0.8466,
+      "pass": true
+    },
+    {
+      "id": "K2",
+      "criterion": "invoice_number acc >= 0.85",
+      "threshold": 0.85,
+      "value": 0.9442,
+      "pass": true
+    },
+    {
+      "id": "K3",
+      "criterion": "supplier_tax_id acc >= 0.85",
+      "threshold": 0.85,
+      "value": 0.9691,
+      "pass": true
+    },
+    {
+      "id": "K4",
+      "criterion": "customer_tax_id acc >= 0.85",
+      "threshold": 0.85,
+      "value": 0.9381,
+      "pass": true
+    },
+    {
+      "id": "K5",
+      "criterion": "amount_inc_vat acc >= 0.85",
+      "threshold": 0.85,
+      "value": 0.5752,
+      "pass": false
+    },
+    {
+      "id": "K6",
+      "criterion": "due_date acc >= 0.85",
+      "threshold": 0.85,
+      "value": 0.7104,
+      "pass": false
+    },
+    {
+      "id": "K7",
+      "criterion": "JSON Validity Rate >= 0.98",
+      "threshold": 0.98,
+      "value": 1.0,
+      "pass": true
+    },
+    {
+      "id": "K8",
+      "criterion": "Avg latency/doc <= 60 s",
+      "threshold": 60.0,
+      "value": 18.4038,
+      "pass": true
+    },
+    {
+      "id": "K9",
+      "criterion": "F1 Q3 >= 0.45",
+      "threshold": 0.45,
+      "value": 0.7744,
+      "pass": true
+    }
+  ]
+}

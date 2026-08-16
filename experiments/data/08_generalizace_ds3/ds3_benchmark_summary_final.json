@@ -1,0 +1,141 @@
+{
+  "benchmark": "DS3 Generalization — final pipeline (Fix3 removed), null==0 scoring",
+  "note": "Synthetic unseen-supplier set. Evaluated on the 8 common GT fields (amount_inc_vat absent in DS3 GT). null==0 flips=0 (no-op).",
+  "n_invoices": 162,
+  "n_escalated": 104,
+  "escalation_rate": 0.642,
+  "macro_f1": 0.9381,
+  "precision": 0.9462,
+  "recall": 0.9396,
+  "total_cost_usd": 4.211,
+  "cost_per_doc_usd": 0.025994,
+  "full_pipeline_ms_mean": 18871.5,
+  "json_validity_rate": 1.0,
+  "due_date_accuracy": 0.9074,
+  "field_accuracy": {
+    "amount_ex_vat": 0.9556,
+    "customer_tax_id": 0.7111,
+    "due_date": 0.9074,
+    "invoice_number": 0.821,
+    "issue_date": 0.9012,
+    "period_from": 0.9691,
+    "period_to": 0.9877,
+    "supplier_tax_id": 0.9333
+  },
+  "by_commodity": {
+    "elektrina_nn": {
+      "N": 27,
+      "F1": 0.9565,
+      "Precision": 0.9259,
+      "Recall": 1.0,
+      "Null": 0.2619
+    },
+    "elektrina_vn": {
+      "N": 27,
+      "F1": 0.9389,
+      "Precision": 0.9556,
+      "Recall": 0.9272,
+      "Null": 0.6667
+    },
+    "plyn_mo": {
+      "N": 27,
+      "F1": 0.9338,
+      "Precision": 0.9407,
+      "Recall": 0.9306,
+      "Null": 0.5422
+    },
+    "plyn_vo": {
+      "N": 27,
+      "F1": 0.9869,
+      "Precision": 0.9861,
+      "Recall": 0.9907,
+      "Null": 0.4978
+    },
+    "teplo": {
+      "N": 27,
+      "F1": 0.8593,
+      "Precision": 0.9206,
+      "Recall": 0.8274,
+      "Null": 0.4858
+    },
+    "voda": {
+      "N": 27,
+      "F1": 0.953,
+      "Precision": 0.9482,
+      "Recall": 0.9615,
+      "Null": 0.3432
+    }
+  },
+  "by_quality": {
+    "Q1": {
+      "N": 54,
+      "F1": 0.9664
+    },
+    "Q2": {
+      "N": 54,
+      "F1": 0.9676
+    },
+    "Q3": {
+      "N": 54,
+      "F1": 0.8802
+    }
+  },
+  "acceptance_criteria": [
+    {
+      "id": "K1",
+      "criterion": "Macro F1 >= 0.60",
+      "threshold": 0.6,
+      "value": 0.9381,
+      "pass": true
+    },
+    {
+      "id": "K2",
+      "criterion": "invoice_number acc >= 0.85",
+      "threshold": 0.85,
+      "value": 0.821,
+      "pass": false
+    },
+    {
+      "id": "K3",
+      "criterion": "supplier_tax_id acc >= 0.85",
+      "threshold": 0.85,
+      "value": 0.9333,
+      "pass": true
+    },
+    {
+      "id": "K4",
+      "criterion": "customer_tax_id acc >= 0.85",
+      "threshold": 0.85,
+      "value": 0.7111,
+      "pass": false
+    },
+    {
+      "id": "K6",
+      "criterion": "due_date acc >= 0.85",
+      "threshold": 0.85,
+      "value": 0.9074,
+      "pass": true
+    },
+    {
+      "id": "K7",
+      "criterion": "JSON Validity Rate >= 0.98",
+      "threshold": 0.98,
+      "value": 1.0,
+      "pass": true
+    },
+    {
+      "id": "K8",
+      "criterion": "Avg latency/doc <= 60 s",
+      "threshold": 60.0,
+      "value": 18.8715,
+      "pass": true
+    },
+    {
+      "id": "K9",
+      "criterion": "F1 Q3 >= 0.45",
+      "threshold": 0.45,
+      "value": 0.8802,
+      "pass": true
+    }
+  ]
+}

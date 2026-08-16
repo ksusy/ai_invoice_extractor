@@ -1,0 +1,19 @@
+_archive/
+.git/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+*.db
+*.log
+.env
+# Reálné faktury se do obrazu nekopírují (osobní údaje); DS3 ano.
+data/ds1/
+data/ds1_clean/
+data/ds2/
+data/sorted/
+data/80195/

@@ -1,0 +1,10 @@
+field,metric,before,after,delta
+supplier,accuracy,0.4,1.0,0.6
+supplier,precision,0.4,1.0,0.6
+supplier,recall,1.0,1.0,0.0
+supplier,f1,0.5714,1.0,0.4286
+supplier,n_docs,60,60,
+supplier,n_canonical_refs,6,6,
+supplier,method,plain_VLM,VLM+RAG(KB_in_prompt),
+supplier,api_calls,0,60,
+supplier,est_cost_usd,0,0.0919,

@@ -1,0 +1,28 @@
+# Dva režimy téhož obrazu.
+#
+#   docker compose up notebooks   → JupyterLab na http://localhost:8888
+#   docker compose up api         → REST API na  http://localhost:8000/docs
+#
+services:
+  notebooks:
+    build: .
+    image: ai-invoice-extractor
+    command: ["notebooks"]
+    ports:
+      - "8888:8888"
+    volumes:
+      # Změny v notebocích a datech se propisují na hostitele
+      - ./experiments:/app/experiments
+      - ./data:/app/data
+
+  api:
+    build: .
+    image: ai-invoice-extractor
+    command: ["api"]
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data

@@ -1,0 +1,80 @@
+komodita,dodavatel,typ_pdf,pocet
+elektrina_nn,ARMEX ENERGY a.s,native,37
+elektrina_nn,ARMEX ENERGY a.s,scan_image,3
+elektrina_nn,ARMEX ENERGY a.s,scan_ocr,14
+elektrina_nn,"CENTROPOL ENERGY, a.s",native,3972
+elektrina_nn,"CENTROPOL ENERGY, a.s",scan_image,1753
+elektrina_nn,"CENTROPOL ENERGY, a.s",scan_ocr,166
+elektrina_nn,"EP ENERGY TRADING, a.s",native,165
+elektrina_nn,"EP ENERGY TRADING, a.s",scan_image,17
+elektrina_nn,"EP ENERGY TRADING, a.s",scan_ocr,33
+elektrina_nn,"Pražská energetika, a.s",native,11
+elektrina_nn,"Pražská energetika, a.s",scan_image,1
+elektrina_nn,"Pražská plynárenská, a.s",scan_image,8
+elektrina_nn,SUAS Commodities s.r.o,native,539
+elektrina_nn,"ČEZ ESCO, a.s",native,139
+elektrina_nn,"ČEZ ESCO, a.s",scan_image,2
+elektrina_nn,"ČEZ ESCO, a.s",scan_ocr,1
+elektrina_nn,"ČEZ Prodej, a.s",native,16
+elektrina_nn,"ČEZ Prodej, a.s",scan_image,13
+elektrina_nn,"ČEZ Prodej, a.s",scan_ocr,40
+elektrina_vn,Powertica Energie a.s,native,341
+elektrina_vn,Powertica Energie a.s,scan_image,5
+elektrina_vn,"Pražská energetika, a.s",native,198
+elektrina_vn,"Pražská energetika, a.s",scan_image,50
+elektrina_vn,"Pražská energetika, a.s",scan_ocr,1
+elektrina_vn,SUAS Commodities s.r.o,native,24
+elektrina_vn,"Veolia Komodity ČR, s.r.o",native,8
+elektrina_vn,_neznamy_dodavatel,native,2
+plyn_mo,ARMEX ENERGY a.s,native,6
+plyn_mo,ARMEX ENERGY a.s,scan_ocr,2
+plyn_mo,"CENTROPOL ENERGY, a.s",scan_ocr,4
+plyn_mo,"EP ENERGY TRADING, a.s",scan_image,1
+plyn_mo,"EP ENERGY TRADING, a.s",scan_ocr,4
+plyn_mo,MND Energie a.s,native,1
+plyn_mo,MND Energie a.s,scan_image,1
+plyn_mo,MND Energie a.s,scan_ocr,1
+plyn_mo,"Pražská plynárenská, a.s",native,499
+plyn_mo,"Pražská plynárenská, a.s",scan_image,404
+plyn_mo,"Pražská plynárenská, a.s",scan_ocr,59
+plyn_mo,_neznamy_dodavatel,native,2
+plyn_mo,"innogy Energie, s.r.o",scan_image,1
+plyn_mo,"ČEZ ESCO, a.s",scan_image,2
+plyn_mo,"ČEZ Prodej, a.s",native,1
+plyn_mo,"ČEZ Prodej, a.s",scan_image,1
+plyn_mo,"ČEZ Prodej, a.s",scan_ocr,1
+plyn_vo,"Pražská plynárenská, a.s",native,410
+plyn_vo,"Pražská plynárenská, a.s",scan_image,61
+plyn_vo,"Pražská plynárenská, a.s",scan_ocr,21
+teplo,ENERGIE Holding a.s,native,8
+teplo,ENERGIE Holding a.s,scan_image,11
+teplo,ENERGIE Holding a.s,scan_ocr,3
+teplo,"ENERGY Ústí nad Labem, a.s",scan_image,13
+teplo,HELIA PRO s.r.o,native,1
+teplo,HELIA PRO s.r.o,scan_image,4
+teplo,"Severočeská teplárenská, a.s",native,125
+teplo,"Severočeská teplárenská, a.s",scan_image,34
+teplo,"Severočeská teplárenská, a.s",scan_ocr,1
+teplo,"Tepelné hospodářství Kadaň, s.r.o",native,1
+teplo,"Tepelné hospodářství Kadaň, s.r.o",scan_image,106
+teplo,Tepelné hospodářství města Lovosic s.r.o,native,2
+teplo,Tepelné hospodářství města Lovosic s.r.o,scan_image,9
+teplo,Tepelné hospodářství města Ústí nad Labem s.r.o,native,15
+teplo,Tepelné hospodářství města Ústí nad Labem s.r.o,scan_image,33
+teplo,Tepelné hospodářství města Ústí nad Labem s.r.o,scan_ocr,5
+teplo,Teplárna Varnsdorf a.s,native,59
+teplo,_neznamy_dodavatel,scan_image,3
+teplo,"innogy Energo, s.r.o",native,5
+teplo,"innogy Energo, s.r.o",scan_image,4
+teplo,"innogy Energo, s.r.o",scan_ocr,2
+teplo,"ČEZ Teplárenská, a.s",native,301
+teplo,"ČEZ Teplárenská, a.s",scan_image,204
+teplo,"ČEZ Teplárenská, a.s",scan_ocr,16
+teplo,"Žatecká teplárenská, a.s",native,10
+teplo,"Žatecká teplárenská, a.s",scan_image,11
+voda,"Restamo Development, a.s",scan_image,15
+voda,"Severočeské vodovody a kanalizace, a.s",native,561
+voda,"Severočeské vodovody a kanalizace, a.s",scan_image,641
+voda,"Severočeské vodovody a kanalizace, a.s",scan_ocr,85
+voda,Technické služby Velký Šenov,native,2
+voda,_neznamy_dodavatel,native,2

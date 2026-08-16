@@ -1,0 +1,4 @@
+﻿lie_strategy,Precision_prumer,Recall_prumer,F1_prumer,F1_std,Prompt_tokeny_prumer,Celk_tokeny_prumer,Latence_ms_prumer,Naklady_USD_celkem,Naklady_CZK_celkem,Naklady_USD_na_doc,Pocet_dokumentu
+JSON-light,0.3525,0.6573,0.4184,0.2866,1469.3684,1508.4276,957.0575,0.0371,0.871,0.0002,152
+HTML,0.3438,0.6513,0.4121,0.28,1817.3487,1856.1184,1071.0867,0.045,1.0568,0.0003,152
+Markdown,0.3377,0.6535,0.4072,0.2842,1458.6118,1497.8882,989.6008,0.0368,0.8657,0.0002,152
