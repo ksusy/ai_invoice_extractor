@@ -22,7 +22,7 @@ Public surface
     TableExtractor       — standalone table-structure utility
 """
 
-from .pipeline import LayoutPipeline, LayoutResult, DetectedRegion
+from .pipeline import DetectedRegion, LayoutPipeline, LayoutResult
 from .skew_corrector import SkewCorrector
 from .table_extractor import TableExtractor
 

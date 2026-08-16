@@ -1,31 +1,31 @@
 from src.domain.constants import PRINT_MODE
 from src.domain.entities import (
-    # Enums
-    CommodityType,
-    InvoiceType,
     # Value Objects
     AddressInfo,
     BillingPeriod,
+    # Enums
+    CommodityType,
+    # Legacy
+    ConsumptionRecord,
     CorrectionInfo,
-    MeterReading,
-    MonetaryAmount,
-    SupplyPoint,
     # Commodity Details
     ElectricityNNData,
     ElectricityVNData,
+    ExtractionResult,
     GasMOData,
     GasVOData,
-    WaterData,
     HeatData,
     # Main Models
     InvoiceData,
-    ExtractionResult,
+    InvoiceMetadata,
+    InvoiceType,
+    MeterReading,
+    MonetaryAmount,
+    SupplyPoint,
+    WaterData,
     # Helpers
     clean_czech_number,
     parse_czech_date,
-    # Legacy
-    ConsumptionRecord,
-    InvoiceMetadata,
 )
 
 __all__ = [

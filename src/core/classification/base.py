@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from enum import Enum
+from enum import StrEnum
 
 
-class DocumentKind(str, Enum):
+class DocumentKind(StrEnum):
     """Result of the native/scan classifier."""
 
     NATIVE_PDF = "native_pdf"   # Has a selectable text layer

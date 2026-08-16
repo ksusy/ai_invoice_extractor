@@ -20,14 +20,9 @@ from __future__ import annotations
 import io
 import logging
 import uuid
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Sequence
 
-from pdfminer.high_level import extract_text
-from pdfminer.pdfpage import PDFPage
-from pdfminer.pdfparser import PDFParser
-from pdfminer.pdfdocument import PDFDocument
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator
 from pdfminer.layout import (
     LAParams,
@@ -36,9 +31,11 @@ from pdfminer.layout import (
     LTFigure,
     LTImage,
     LTPage,
-    LTTextBox,
-    LTTextLine,
 )
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfparser import PDFParser
 from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 

@@ -10,19 +10,16 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from datetime import date
 from typing import Any
 from uuid import UUID
 
 from src.core.analysis.base import AnalysisReport, BaseAnalyser
 from src.domain.entities import (
-    CommodityType,
     CorrectionInfo,
     InvoiceData,
     InvoiceMetadata,
     InvoiceType,
 )
-
 
 logger = logging.getLogger(__name__)
 

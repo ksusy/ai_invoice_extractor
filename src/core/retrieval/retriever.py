@@ -42,7 +42,7 @@ class FewShotRetriever:
             raise ImportError(
                 "FewShotRetriever requires 'faiss-cpu' and 'openai'. "
                 f"Install with: pip install faiss-cpu openai\n{e}"
-            )
+            ) from e
 
         if not index_path.exists():
             raise FileNotFoundError(

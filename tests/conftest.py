@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from datetime import date
-from uuid import uuid4
 
 import pytest
 
@@ -18,7 +17,6 @@ from src.domain.entities import (
     InvoiceType,
     SupplyPoint,
 )
-
 
 # ── Database fixtures (SQLite async for fast tests) ──────────────
 
@@ -62,11 +60,11 @@ async def async_session(async_engine):
 @pytest.fixture()
 def app(async_engine):
     """Create a FastAPI test app with the test DB wired in."""
-    from unittest.mock import AsyncMock, patch
 
-    from src.main import create_app
-    from src.infrastructure.db.database import get_async_session
     from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+
+    from src.infrastructure.db.database import get_async_session
+    from src.main import create_app
 
     test_app = create_app()
 
@@ -93,7 +91,7 @@ def app(async_engine):
 @pytest.fixture()
 async def client(app):
     """Async HTTP client for testing FastAPI endpoints."""
-    from httpx import AsyncClient, ASGITransport
+    from httpx import ASGITransport, AsyncClient
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:

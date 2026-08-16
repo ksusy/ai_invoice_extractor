@@ -42,11 +42,12 @@ import math
 import re
 import statistics
 import unicodedata
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from pathlib import Path
 from random import Random
-from typing import Any, Sequence
+from typing import Any
 
 # ════════════════════════════════════════════════════════════════════════════
 # CONSTANTS
@@ -158,9 +159,7 @@ class FieldResult:
             return True
         if self.field_name in NUMERIC_FIELDS and self.is_numeric_match:
             return True
-        if self.field_name in DATE_FIELDS and self.is_date_match:
-            return True
-        return False
+        return bool(self.field_name in DATE_FIELDS and self.is_date_match)
 
 
 @dataclass

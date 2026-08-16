@@ -14,20 +14,18 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Optional
+from enum import StrEnum
 
-from src.core.classification.base import DocumentKind
-from src.core.classification.pdf_classifier import PDFClassifier
 from src.core.classification.advanced_classifier import (
     AdvancedPDFClassifier,
-    AdvancedClassificationResult,
 )
+from src.core.classification.base import DocumentKind
+from src.core.classification.pdf_classifier import PDFClassifier
 
 logger = logging.getLogger(__name__)
 
 
-class EnsembleStrategy(str, Enum):
+class EnsembleStrategy(StrEnum):
     """Decision strategies for combining multiple classifiers."""
 
     CONSERVATIVE = "conservative"  # Majority vote, always default to SCANNED on tie
@@ -55,7 +53,7 @@ class EnsembleResult:
     agreement_level: float  # [0, 1] – how much classifiers agreed
     individual_scores: list[ClassifierScore]
     decision_reasoning: list[str]
-    recommendation: Optional[str] = None  # "review_manually" if uncertain
+    recommendation: str | None = None  # "review_manually" if uncertain
 
 
 class EnsemblePDFClassifier:

@@ -7,10 +7,8 @@ test client (httpx.AsyncClient) to validate upload and result routes.
 from __future__ import annotations
 
 import uuid
-from io import BytesIO
 
 import pytest
-
 
 # ── Health check ─────────────────────────────────────────────────
 
@@ -69,6 +67,7 @@ async def test_get_result_status_not_found(client):
 async def test_invoice_roundtrip(async_session):
     """Save an invoice to the DB and read it back."""
     from datetime import date as d
+
     from src.infrastructure.db.models import Invoice
 
     inv = Invoice(
@@ -119,8 +118,10 @@ async def test_commodity_details_cascade(async_session):
     """ElectricityNNDetail should cascade-delete with its Invoice."""
     from datetime import date as d
     from decimal import Decimal
-    from src.infrastructure.db.models import Invoice, ElectricityNNDetail
+
     from sqlalchemy import select
+
+    from src.infrastructure.db.models import ElectricityNNDetail, Invoice
 
     inv = Invoice(
         source_filename="cascade_test.pdf",

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from src.core.classification.base import DocumentKind
 from src.core.classification.pdf_classifier import (
     MAX_IMAGE_AREA_RATIO,
     MIN_CODEPOINT_DIVERSITY,
@@ -12,7 +13,6 @@ from src.core.classification.pdf_classifier import (
     MIN_TOTAL_CHARS,
     PDFClassifier,
 )
-from src.core.classification.base import DocumentKind
 
 
 class TestPDFClassifierDecision:

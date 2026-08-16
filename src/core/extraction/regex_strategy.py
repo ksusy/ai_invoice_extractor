@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import re
 from datetime import date
-from typing import Any
 
 from src.core.extraction.base import BaseExtractionStrategy, ExtractionContext
 from src.domain.entities import (
@@ -29,7 +28,6 @@ from src.domain.entities import (
     clean_czech_number,
     parse_czech_date,
 )
-
 
 # ════════════════════════════════════════════════════════════════════════════
 # REGEX PATTERNS FOR CZECH INVOICES
@@ -645,9 +643,9 @@ class RegexExtractionStrategy(BaseExtractionStrategy):
             warnings.append("No supply point identifier found (EAN/EIC/code)")
 
         # Validate dates
-        if invoice_data.due_date and invoice_data.issue_date:
-            if invoice_data.due_date < invoice_data.issue_date:
-                warnings.append("Due date is before issue date")
+        if (invoice_data.due_date and invoice_data.issue_date
+                and invoice_data.due_date < invoice_data.issue_date):
+            warnings.append("Due date is before issue date")
 
         # Validate amounts
         if invoice_data.total_amount_inc_vat is not None:

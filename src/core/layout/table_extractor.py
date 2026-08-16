@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any
 
 import cv2
 import numpy as np
@@ -73,7 +72,7 @@ class TableRegion:
         cells: list[TableCell],
         bbox: tuple[int, int, int, int],
         source: str = "lines",
-    ) -> "TableRegion":
+    ) -> TableRegion:
         """Build a TableRegion from a cell list and generate HTML."""
         if not cells:
             return cls(bbox=bbox, source=source)

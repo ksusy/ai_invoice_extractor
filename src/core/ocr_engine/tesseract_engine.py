@@ -100,7 +100,7 @@ class TesseractEngine(BaseOCREngine):
         return "tesseract"
 
     @staticmethod
-    def _preprocess_for_ocr(image: "Image.Image") -> "Image.Image":
+    def _preprocess_for_ocr(image: Image.Image) -> Image.Image:
         """Apply grayscale normalize + NLM denoising before OCR.
 
         OCR sweep tested 18 configs; Gaussian unsharp mask gave +10% raw OCR
@@ -292,7 +292,7 @@ class TesseractEngine(BaseOCREngine):
 
         return json.dumps(out, ensure_ascii=False, separators=(",", ":"))
 
-    def _run_ocr_sync(self, image: "Image.Image") -> tuple[str, float]:
+    def _run_ocr_sync(self, image: Image.Image) -> tuple[str, float]:
         """Run OCR synchronously on a single image.
 
         Uses a single tesseract call (image_to_data) to get both text and
@@ -387,7 +387,7 @@ class TesseractEngine(BaseOCREngine):
         try:
             loop = asyncio.get_running_loop()
 
-            def _render_pages() -> list["Image.Image"]:
+            def _render_pages() -> list[Image.Image]:
                 """Render all pages via fitz, fall back to pdf2image if unavailable."""
                 try:
                     import fitz

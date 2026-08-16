@@ -17,6 +17,7 @@ from decimal import Decimal
 from typing import TYPE_CHECKING
 
 from sqlalchemy import (
+    JSON,
     Boolean,
     Date,
     DateTime,
@@ -26,9 +27,9 @@ from sqlalchemy import (
     Numeric,
     String,
     Text,
+    Uuid,
     func,
 )
-from sqlalchemy import JSON, Uuid
 from sqlalchemy.dialects.postgresql import JSONB as PG_JSONB
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID_TYPE
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -147,25 +148,25 @@ class Invoice(Base):
     raw_extracted_json: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
 
     # ── Relationships ────────────────────────────────────────────
-    corrected_invoice: Mapped["Invoice | None"] = relationship(
+    corrected_invoice: Mapped[Invoice | None] = relationship(
         "Invoice", remote_side=[id], foreign_keys=[corrected_invoice_id]
     )
-    electricity_nn_details: Mapped[list["ElectricityNNDetail"]] = relationship(
+    electricity_nn_details: Mapped[list[ElectricityNNDetail]] = relationship(
         back_populates="invoice", cascade="all, delete-orphan"
     )
-    electricity_vn_details: Mapped[list["ElectricityVNDetail"]] = relationship(
+    electricity_vn_details: Mapped[list[ElectricityVNDetail]] = relationship(
         back_populates="invoice", cascade="all, delete-orphan"
     )
-    gas_mo_details: Mapped[list["GasMODetail"]] = relationship(
+    gas_mo_details: Mapped[list[GasMODetail]] = relationship(
         back_populates="invoice", cascade="all, delete-orphan"
     )
-    water_details: Mapped[list["WaterDetail"]] = relationship(
+    water_details: Mapped[list[WaterDetail]] = relationship(
         back_populates="invoice", cascade="all, delete-orphan"
     )
-    heat_details: Mapped[list["HeatDetail"]] = relationship(
+    heat_details: Mapped[list[HeatDetail]] = relationship(
         back_populates="invoice", cascade="all, delete-orphan"
     )
-    gas_vo_details: Mapped[list["GasVODetail"]] = relationship(
+    gas_vo_details: Mapped[list[GasVODetail]] = relationship(
         back_populates="invoice", cascade="all, delete-orphan"
     )
 
@@ -241,7 +242,7 @@ class ElectricityNNDetail(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
-    invoice: Mapped["Invoice"] = relationship(back_populates="electricity_nn_details")
+    invoice: Mapped[Invoice] = relationship(back_populates="electricity_nn_details")
 
 
 class ElectricityVNDetail(Base):
@@ -307,7 +308,7 @@ class ElectricityVNDetail(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
-    invoice: Mapped["Invoice"] = relationship(back_populates="electricity_vn_details")
+    invoice: Mapped[Invoice] = relationship(back_populates="electricity_vn_details")
 
 
 class GasMODetail(Base):
@@ -378,7 +379,7 @@ class GasMODetail(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
-    invoice: Mapped["Invoice"] = relationship(back_populates="gas_mo_details")
+    invoice: Mapped[Invoice] = relationship(back_populates="gas_mo_details")
 
 
 class WaterDetail(Base):
@@ -418,7 +419,7 @@ class WaterDetail(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
-    invoice: Mapped["Invoice"] = relationship(back_populates="water_details")
+    invoice: Mapped[Invoice] = relationship(back_populates="water_details")
 
 
 class HeatDetail(Base):
@@ -463,7 +464,7 @@ class HeatDetail(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
-    invoice: Mapped["Invoice"] = relationship(back_populates="heat_details")
+    invoice: Mapped[Invoice] = relationship(back_populates="heat_details")
 
 
 class GasVODetail(Base):
@@ -516,7 +517,7 @@ class GasVODetail(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
-    invoice: Mapped["Invoice"] = relationship(back_populates="gas_vo_details")
+    invoice: Mapped[Invoice] = relationship(back_populates="gas_vo_details")
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -537,12 +538,12 @@ class Transaction(Base):
     file_size_bytes: Mapped[int | None] = mapped_column(Integer, nullable=True)
     mime_type: Mapped[str | None] = mapped_column(String(128), nullable=True)
     commodity: Mapped[str | None] = mapped_column(String(64), nullable=True)
-    
+
     # Classification result
     is_scan: Mapped[bool | None] = mapped_column(
         Boolean, nullable=True
     )  # True = scanned image, False = native PDF with text layer, None = not classified yet
-    
+
     status: Mapped[str] = mapped_column(
         String(32), default="pending", index=True
     )  # pending | classifying | processing | completed | error
@@ -558,10 +559,10 @@ class Transaction(Base):
     )
 
     # Relationships
-    ocr_results: Mapped[list["OCRResult"]] = relationship(
+    ocr_results: Mapped[list[OCRResult]] = relationship(
         back_populates="transaction", cascade="all, delete-orphan"
     )
-    extraction_results: Mapped[list["DBExtractionResult"]] = relationship(
+    extraction_results: Mapped[list[DBExtractionResult]] = relationship(
         back_populates="transaction", cascade="all, delete-orphan"
     )
 
@@ -589,7 +590,7 @@ class OCRResult(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
-    transaction: Mapped["Transaction"] = relationship(back_populates="ocr_results")
+    transaction: Mapped[Transaction] = relationship(back_populates="ocr_results")
 
 
 class DBExtractionResult(Base):
@@ -627,7 +628,7 @@ class DBExtractionResult(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
-    transaction: Mapped["Transaction"] = relationship(back_populates="extraction_results")
+    transaction: Mapped[Transaction] = relationship(back_populates="extraction_results")
 
 
 class PipelineStepLog(Base):

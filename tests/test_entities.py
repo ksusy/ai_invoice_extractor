@@ -6,6 +6,8 @@ from datetime import date
 
 import pytest
 
+from src.core.commodities.factory import CommoditySchemaFactory
+from src.domain.constants import CommodityType
 from src.domain.entities import (
     BillingPeriod,
     ConsumptionRecord,
@@ -13,9 +15,6 @@ from src.domain.entities import (
     clean_czech_number,
     clean_czech_number_required,
 )
-from src.core.commodities.factory import CommoditySchemaFactory
-from src.domain.constants import CommodityType
-
 
 # ── clean_czech_number ───────────────────────────────────────────
 

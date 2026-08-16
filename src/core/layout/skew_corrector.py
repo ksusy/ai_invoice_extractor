@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import Any
 
 import cv2
 import numpy as np

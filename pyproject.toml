@@ -66,8 +66,27 @@ build-backend = "hatchling.build"
 
 [tool.ruff]
 target-version = "py311"
-line-length = 100
-select = ["E", "F", "I", "N", "W", "UP", "B", "SIM"]
+line-length = 110
+
+[tool.ruff.lint]
+# Jádro kontrol: skutečné chyby (F), řazení importů (I), typické nástrahy (B)
+# a modernizace zápisu (UP). Stylové kontroly zůstávají, s výjimkami níže.
+select = ["E", "F", "I", "W", "UP", "B", "SIM"]
+ignore = [
+    "E501",   # délku řádku hlídá formátovací limit výše, ne chybová hláška
+    "B905",   # zip(strict=) — doplňuje se cíleně, ne plošně
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Skripty pro dávkové běhy jsou psané hutným výzkumným stylem: podmínky
+# a přiřazení na jednom řádku, importy uvnitř funkcí kvůli volitelným
+# závislostem. Na čitelnost výsledků to vliv nemá.
+"scripts/*.py" = ["E402", "E701", "E702", "E741", "SIM", "B"]
+"experiments/*.py" = ["E402"]
+# Notebooky načítají styl hvězdičkovým importem záměrně — zkracuje to buňky
+# a jde o report, ne o knihovnu. Import thesis_style navíc musí následovat až
+# po úpravě sys.path, takže jej nelze seřadit mezi ostatní (I001).
+"experiments/notebooks/*.ipynb" = ["F403", "F405", "E402", "I001"]
 
 [tool.mypy]
 python_version = "3.11"

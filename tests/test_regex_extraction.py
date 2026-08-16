@@ -10,7 +10,6 @@ from src.core.extraction.base import ExtractionContext
 from src.core.extraction.regex_strategy import RegexExtractionStrategy
 from src.domain.entities import CommodityType
 
-
 SAMPLE_ELECTRICITY_TEXT = """
 Faktura za elektřinu č. FV-2025-0042
 Variabilní symbol: 1234567890

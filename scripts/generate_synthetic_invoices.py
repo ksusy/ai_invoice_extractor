@@ -31,7 +31,6 @@ Prerekvizity:
 from __future__ import annotations
 
 import io
-import math
 import random
 import sys
 from dataclasses import dataclass
@@ -614,15 +613,15 @@ def render_voltpro(c_obj: canvas.Canvas, sup: Supplier,
          str(inv.get('demand_kw', '—')), "kW",
          f"{_fmt(inv.get('demand_price', 0))} Kč/kW/měs",
          _fmt(inv.get('demand_total', 0))),
-        (f"Činná energie VT",
+        ("Činná energie VT",
          str(inv.get('kWh_vt', '—')), "kWh",
          f"{_fmt(inv.get('price_vt', 0))} Kč/kWh",
          _fmt(inv.get('vt_total', 0))),
-        (f"Činná energie NT",
+        ("Činná energie NT",
          str(inv.get('kWh_nt', '—')), "kWh",
          f"{_fmt(inv.get('price_nt', 0))} Kč/kWh",
          _fmt(inv.get('nt_total', 0))),
-        (f"Systémové služby",
+        ("Systémové služby",
          str(inv['consumption']), "kWh",
          f"{_fmt(inv.get('price_ss', 0))} Kč/kWh",
          _fmt(inv.get('ss_total', 0))),
@@ -1998,8 +1997,8 @@ def render_termoplus(c_obj: canvas.Canvas, sup: Supplier,
         bal_lines = [
             f"Po zohlednění uhrazených záloh ve výši {_fmt(inv['advances'])} Kč",
             f"vznikl přeplatek {_fmt(abs(balance))} Kč. Tento přeplatek bude",
-            f"vrácen na Váš bankovní účet do 14 pracovních dnů od data vystavení",
-            f"tohoto vyúčtování.",
+            "vrácen na Váš bankovní účet do 14 pracovních dnů od data vystavení",
+            "tohoto vyúčtování.",
         ]
     for ln in bal_lines:
         c_obj.drawString(LM, y, ln)
@@ -2009,7 +2008,7 @@ def render_termoplus(c_obj: canvas.Canvas, sup: Supplier,
     y -= 4*mm
     c_obj.drawString(LM, y,          "V případě dotazů se prosím obraťte na naše zákaznické centrum.")
     y -= 5.2*mm
-    c_obj.drawString(LM, y,          f"Děkujeme za Vaši přízeň a těšíme se na další spolupráci.")
+    c_obj.drawString(LM, y,          "Děkujeme za Vaši přízeň a těšíme se na další spolupráci.")
     y -= 8*mm
     c_obj.setFont(FONT_BOLD, 9)
     c_obj.drawString(LM, y, f"S pozdravem,   {sup.name}")
@@ -2483,7 +2482,8 @@ def _degrade_q3(img: Image.Image, rng: random.Random) -> Image.Image:
 
 def _image_to_pdf_bytes(img: Image.Image) -> bytes:
     """Obalí PIL obrázek jako jednostránkové PDF (bez textové vrstvy)."""
-    import os, tempfile
+    import os
+    import tempfile
     buf = io.BytesIO()
     with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tf:
         tmp_path = tf.name

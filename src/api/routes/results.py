@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Annotated, Any
+from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from src.infrastructure.db.database import get_async_session
 from src.infrastructure.db.models import (
@@ -100,7 +99,6 @@ async def list_results(
     total = total_result.scalar() or 0
 
     # Build response items with a single subquery for extraction existence
-    from sqlalchemy import exists as sa_exists
 
     ext_exists_subq = (
         select(DBExtractionResult.transaction_id)

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Příprava anonymizovaných datových podkladů pro reportovací notebooky.
 

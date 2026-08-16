@@ -14,38 +14,35 @@ import asyncio
 import logging
 import time
 import uuid
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import StrEnum
 from pathlib import Path
-from typing import BinaryIO, Sequence
+from typing import BinaryIO
 
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.analysis import (
     AnalysisReport,
-    CorrectionAnalyser,
-    TransitionalAnalyser,
     create_correction_analyser,
     create_transitional_analyser,
 )
-from src.core.classification import DocumentKind, PDFClassifier, create_pdf_classifier
+from src.core.classification import DocumentKind, create_pdf_classifier
 from src.core.extraction import (
     BaseExtractionStrategy,
     ExtractionContext,
-    RegexExtractionStrategy,
     create_langchain_strategy,
     create_regex_strategy,
 )
-from src.core.ingestion import IngestionService, create_ingestion_service
-from src.core.ocr_engine import OCRResult, TesseractEngine, create_tesseract_engine
+from src.core.ingestion import create_ingestion_service
+from src.core.ocr_engine import OCRResult, create_tesseract_engine
 from src.domain.entities import (
+    CommodityType,
     ExtractionResult,
     InvoiceData,
     InvoiceType,
-    CommodityType,
     clean_consumption_point_code,
     clean_tax_id,
 )
@@ -58,18 +55,19 @@ from src.infrastructure.db.models import (
     GasVODetail,
     HeatDetail,
     Invoice,
-    OCRResult as DBOCRResult,
     Transaction,
     WaterDetail,
 )
-
+from src.infrastructure.db.models import (
+    OCRResult as DBOCRResult,
+)
 
 logger = logging.getLogger(__name__)
 
 ACCEPTANCE_THRESHOLD = 0.6
 
 
-class ProcessingStatus(str, Enum):
+class ProcessingStatus(StrEnum):
     """Pipeline processing status values."""
 
     PENDING = "pending"
@@ -492,16 +490,16 @@ class BenchmarkOrchestrator:
             lines.append("-" * 50)
             ar = comparison.analysis_report
             if ar.is_correction:
-                lines.append(f"Type: OPRAVNÁ FAKTURA (correction)")
+                lines.append("Type: OPRAVNÁ FAKTURA (correction)")
                 if ar.linked_invoice:
                     lines.append(f"Corrects: {ar.linked_invoice}")
             elif ar.is_transitional:
-                lines.append(f"Type: PŘECHODOVÁ FAKTURA (transitional)")
+                lines.append("Type: PŘECHODOVÁ FAKTURA (transitional)")
             else:
-                lines.append(f"Type: Běžná faktura (regular)")
+                lines.append("Type: Běžná faktura (regular)")
 
             if ar.cross_year:
-                lines.append(f"Cross-year: YES (spans multiple calendar years)")
+                lines.append("Cross-year: YES (spans multiple calendar years)")
 
             if ar.warnings:
                 lines.append("Warnings:")
@@ -574,6 +572,7 @@ class ProcessingOrchestrator:
         try:
             import fitz
             from PIL import Image as PILImage
+
             from src.core.ocr_engine.tesseract_engine import TesseractEngine
 
             doc = fitz.open(stream=file_bytes, filetype="pdf")
@@ -729,10 +728,8 @@ class ProcessingOrchestrator:
             extraction_start = time.time()
             _file_bytes: bytes | None = None
             if transaction.file_path:
-                try:
+                with suppress(Exception):
                     _file_bytes = Path(transaction.file_path).read_bytes()
-                except Exception:
-                    pass
             try:
                 extraction_result = await asyncio.wait_for(
                     self._run_iterative_extraction(
@@ -742,7 +739,7 @@ class ProcessingOrchestrator:
                     ),
                     timeout=180.0,
                 )
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 extraction_result = ExtractionResult(
                     source_file=transaction.filename,
                     strategy_name=self._extraction_strategy.name,
@@ -1062,10 +1059,11 @@ class ProcessingOrchestrator:
                     # Czech EAN: 18 digits starting with 859
                     if not cp_clean.startswith("859") or len(cp_clean) != 18:
                         format_ok = False
-                elif commodity in (CommodityType.PLYN_MO, CommodityType.PLYN_VO):
-                    # Czech gas EIC: 16 chars starting with 27ZG
-                    if not cp_clean.startswith("27") or len(cp_clean) < 16:
-                        format_ok = False
+                # Czech gas EIC: 16 chars starting with 27ZG
+                elif commodity in (CommodityType.PLYN_MO, CommodityType.PLYN_VO) and (
+                    not cp_clean.startswith("27") or len(cp_clean) < 16
+                ):
+                    format_ok = False
 
                 if not format_ok:
                     penalty = 0.15
@@ -1383,10 +1381,8 @@ class ProcessingOrchestrator:
             ext_start = time.time()
             _tx_file_bytes: bytes | None = None
             if tx.file_path:
-                try:
+                with suppress(Exception):
                     _tx_file_bytes = Path(tx.file_path).read_bytes()
-                except Exception:
-                    pass
             try:
                 extraction_result = await asyncio.wait_for(
                     self._run_iterative_extraction(
@@ -1396,7 +1392,7 @@ class ProcessingOrchestrator:
                     ),
                     timeout=180.0,
                 )
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 extraction_result = ExtractionResult(
                     source_file=tx.filename,
                     strategy_name=self._extraction_strategy.name,
@@ -1667,7 +1663,7 @@ class ProcessingOrchestrator:
             values["error_message"] = error_message
 
         if status == ProcessingStatus.COMPLETED:
-            values["completed_at"] = datetime.now(timezone.utc)
+            values["completed_at"] = datetime.now(UTC)
 
         stmt = (
             update(Transaction)

@@ -14,12 +14,12 @@ import io
 import logging
 from dataclasses import dataclass, field
 
+from pdfminer.converter import PDFPageAggregator
+from pdfminer.layout import LAParams, LTAnno, LTChar, LTFigure, LTImage, LTPage
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
-from pdfminer.pdfdocument import PDFDocument
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.converter import PDFPageAggregator
-from pdfminer.layout import LAParams, LTChar, LTAnno, LTImage, LTFigure, LTPage
 
 from src.core.classification.base import DocumentKind
 
@@ -33,13 +33,13 @@ class PageAnalysis:
     page_number: int
     estimated_kind: DocumentKind
     confidence: float  # [0, 1]
-    
+
     # Metrics
     char_count: int = 0
     font_count: int = 0
     image_area_ratio: float = 0.0
     invisible_font_ratio: float = 0.0
-    
+
     reasoning: list[str] = field(default_factory=list)
 
 
@@ -49,13 +49,13 @@ class HybridAnalysisResult:
 
     is_hybrid: bool  # True if document has mixed pages
     page_analyses: list[PageAnalysis]
-    
+
     # Summary
     scanned_page_count: int = 0
     native_page_count: int = 0
     uncertain_page_count: int = 0
     scanned_page_ratio: float = 0.0  # [0, 1]
-    
+
     recommendation: str = ""
 
 

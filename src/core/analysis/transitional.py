@@ -16,17 +16,14 @@ from typing import TypeVar
 from src.core.analysis.base import AnalysisReport, BaseAnalyser
 from src.domain.entities import (
     BillingPeriod,
-    CommodityType,
     ElectricityNNData,
     ElectricityVNData,
     GasMOData,
-    GasVOData,
     HeatData,
     InvoiceData,
     InvoiceMetadata,
     WaterData,
 )
-
 
 logger = logging.getLogger(__name__)
 

@@ -12,7 +12,6 @@ import pytest
 
 from src.core.classification.advanced_classifier import (
     AdvancedPDFClassifier,
-    ComponentScores,
 )
 from src.core.classification.base import DocumentKind
 
@@ -257,43 +256,43 @@ class TestAdvancedClassifierHeuristics:
     def test_invisible_font_detection_unknown(self):
         """Font named 'UNKNOWN' should be detected as invisible."""
         assert (
-            AdvancedPDFClassifier._is_invisible_font("UNKNOWN") == True
+            AdvancedPDFClassifier._is_invisible_font("UNKNOWN")
         )
 
     def test_invisible_font_detection_gid(self):
         """Font with 'GID' prefix should be detected as invisible."""
         assert (
-            AdvancedPDFClassifier._is_invisible_font("GID_STD_FONT") == True
+            AdvancedPDFClassifier._is_invisible_font("GID_STD_FONT")
         )
 
     def test_invisible_font_detection_tesseract(self):
         """Tesseract default font."""
         assert (
-            AdvancedPDFClassifier._is_invisible_font("TDSR+Arial") == True
+            AdvancedPDFClassifier._is_invisible_font("TDSR+Arial")
         )
 
     def test_invisible_font_detection_empty(self):
         """Empty font name should be invisible."""
         assert (
-            AdvancedPDFClassifier._is_invisible_font("") == True
+            AdvancedPDFClassifier._is_invisible_font("")
         )
 
     def test_invisible_font_detection_normal(self):
         """Normal font names should not be detected as invisible."""
         assert (
-            AdvancedPDFClassifier._is_invisible_font("TimesNewRoman") == False
+            not AdvancedPDFClassifier._is_invisible_font("TimesNewRoman")
         )
         assert (
-            AdvancedPDFClassifier._is_invisible_font("Helvetica") == False
+            not AdvancedPDFClassifier._is_invisible_font("Helvetica")
         )
 
     def test_valid_unicode_check(self):
         """Unicode validity checker."""
-        assert AdvancedPDFClassifier._is_valid_unicode(ord("A")) == True
-        assert AdvancedPDFClassifier._is_valid_unicode(ord("ß")) == True
-        assert AdvancedPDFClassifier._is_valid_unicode(-1) == False
-        assert AdvancedPDFClassifier._is_valid_unicode(0x110000) == False
-        assert AdvancedPDFClassifier._is_valid_unicode(0xD800) == False  # Surrogate
+        assert AdvancedPDFClassifier._is_valid_unicode(ord("A"))
+        assert AdvancedPDFClassifier._is_valid_unicode(ord("ß"))
+        assert not AdvancedPDFClassifier._is_valid_unicode(-1)
+        assert not AdvancedPDFClassifier._is_valid_unicode(0x110000)
+        assert not AdvancedPDFClassifier._is_valid_unicode(0xD800)  # Surrogate
 
 
 class TestAdvancedClassifierIntegration:

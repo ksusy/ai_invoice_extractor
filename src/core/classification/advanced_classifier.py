@@ -26,12 +26,8 @@ import uuid
 from pathlib import Path
 from typing import NamedTuple
 
-from pdfminer.high_level import extract_text
-from pdfminer.pdfpage import PDFPage
-from pdfminer.pdfparser import PDFParser
-from pdfminer.pdfdocument import PDFDocument
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator
+from pdfminer.high_level import extract_text
 from pdfminer.layout import (
     LAParams,
     LTAnno,
@@ -39,9 +35,11 @@ from pdfminer.layout import (
     LTFigure,
     LTImage,
     LTPage,
-    LTTextBox,
-    LTTextLine,
 )
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfparser import PDFParser
 from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -290,19 +288,15 @@ class AdvancedPDFClassifier(BaseClassifier):
             return True
 
         # Fonts with embedded numbers often indicate OCR engines
-        if bool(re.search(r"[0-9]", fontname)) and len(fontname) < 10:
-            return True
-
-        return False
+        return bool(bool(re.search(r"[0-9]", fontname)) and len(fontname) < 10)
 
     @staticmethod
     def _is_valid_unicode(code_point: int) -> bool:
         """Check if a unicode codepoint is valid."""
         if code_point < 0 or code_point > 0x10FFFF:
             return False
-        if 0xD800 <= code_point <= 0xDFFF:  # Surrogate pair (invalid)
-            return False
-        return True
+        # Náhradní pár (surrogate pair) není platný samostatný znak
+        return not (0xD800 <= code_point <= 0xDFFF)
 
     @staticmethod
     def _iter_layout(layout_obj):

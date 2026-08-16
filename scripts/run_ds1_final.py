@@ -13,6 +13,7 @@ Spuštění:
 from __future__ import annotations
 
 import sys as _sys
+
 if hasattr(_sys.stdout, "reconfigure"):
     _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 if hasattr(_sys.stderr, "reconfigure"):
@@ -20,28 +21,28 @@ if hasattr(_sys.stderr, "reconfigure"):
 
 import argparse
 import base64
-import io
 import json
+import os
 import re
 import sqlite3
 import time
 import unicodedata
 import uuid
 import warnings
-from datetime import datetime, timezone, date as date_cls
+from datetime import UTC, datetime
+from datetime import date as date_cls
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import cv2
 import fitz
 import numpy as np
 import pandas as pd
-from PIL import Image
-from pydantic import BaseModel, Field, create_model
 import pytesseract
-from pytesseract import Output
 from dotenv import load_dotenv
-import os
+from PIL import Image
+from pydantic import Field, create_model
+from pytesseract import Output
 
 warnings.filterwarnings("ignore")
 
@@ -1231,7 +1232,7 @@ def build_json_schema(fields: list[dict]) -> dict:
 def build_pydantic_model(fields: list[dict]):
     fd = {
         f["field_name"]: (
-            Optional[str],
+            str | None,
             Field(None, description=f.get("label_en") or f["field_name"]),
         )
         for f in fields
@@ -1752,7 +1753,7 @@ def _to_float_or_none(value: Any) -> float | None:
         return None
 
 
-def _ref_date_for_vat(extracted: dict) -> Optional[date_cls]:
+def _ref_date_for_vat(extracted: dict) -> date_cls | None:
     """VAT reference date: issue_date, falling back to period_from (Fix 3)."""
     for fld in ("issue_date", "period_from"):
         norm = normalize_value(fld, extracted.get(fld), "date")
@@ -2191,14 +2192,14 @@ def run(limit: int | None = None, dry_run: bool = False,
         print(f"  Primární (GPT-4.1): ${cost_prim:.2f}")
         print(f"  Eskalace Vision:    ${cost_vis:.2f}  (odhad {esc_rate*100:.0f}%)")
         print(f"  CELKEM:             ${total:.2f}  ({total*USD_TO_CZK:.0f} Kč)")
-        print(f"\nPole per komodita:")
+        print("\nPole per komodita:")
         for comm, flds in FIELD_REGISTRY.items():
             if comm not in EXCLUDE_COMMODITIES:
                 print(f"  {comm}: {len(flds)} polí")
         return
 
     RUN_ID = str(uuid.uuid4())[:8]
-    RUN_TS = datetime.now(timezone.utc).isoformat()
+    RUN_TS = datetime.now(UTC).isoformat()
     results: list[dict] = []
 
     print(f"\nBenchmark start  RUN_ID={RUN_ID}")
@@ -2462,7 +2463,7 @@ def run(limit: int | None = None, dry_run: bool = False,
     print(f"  JSON Validity Rate: {jvr*100:.1f}%")
     print("\n  Akceptační kritéria K1–K9:")
     for k, name, val, thr, ok in _crit:
-        print(f"    {k}  {name:<28} {('%.4f' % val) if val is not None else 'n/a':>8}  {'PASS' if ok else 'FAIL'}")
+        print(f"    {k}  {name:<28} {(f'{val:.4f}') if val is not None else 'n/a':>8}  {'PASS' if ok else 'FAIL'}")
 
     # ── EXPORT (v3 — new rerun; v2 baseline preserved) ───────────────────────
     csv_path   = OUTPUT_DIR / f"ds1_benchmark_results_{OUTPUT_TAG}.csv"

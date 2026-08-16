@@ -23,9 +23,10 @@ from __future__ import annotations
 
 import logging
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Literal, Sequence
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     import numpy as np
@@ -242,7 +243,7 @@ class AnalysisResult:
 
     # ── Bridge to the rest of the pipeline ───────────────────────
 
-    def to_ocr_result(self, engine_name: str = "ppstructure") -> "OCRResult":
+    def to_ocr_result(self, engine_name: str = "ppstructure") -> OCRResult:
         """Convert to project-standard :class:`OCRResult`.
 
         This allows ``DocumentAnalyzer`` output to be stored in the
@@ -315,7 +316,7 @@ class DocumentAnalyzer:
 
     def analyze(
         self,
-        image_input: bytes | str | Path | "np.ndarray",
+        image_input: bytes | str | Path | np.ndarray,
         *,
         preprocess: bool = True,
         preprocess_config: PreprocessConfig | None = None,
@@ -412,10 +413,7 @@ class DocumentAnalyzer:
         convert_from_bytes = _ensure_pdf2image()
         np = _ensure_numpy()
 
-        if isinstance(pdf_input, (str, Path)):
-            pdf_bytes = Path(pdf_input).read_bytes()
-        else:
-            pdf_bytes = pdf_input
+        pdf_bytes = Path(pdf_input).read_bytes() if isinstance(pdf_input, (str, Path)) else pdf_input
 
         logger.info("Converting PDF to images at %d DPI", self._pdf_dpi)
         pil_images = convert_from_bytes(pdf_bytes, dpi=self._pdf_dpi)
@@ -431,7 +429,7 @@ class DocumentAnalyzer:
 
     def analyze_pages(
         self,
-        images: Sequence[bytes | str | Path | "np.ndarray"],
+        images: Sequence[bytes | str | Path | np.ndarray],
         **kwargs,
     ) -> list[AnalysisResult]:
         """Analyse a sequence of pre-split page images."""
@@ -439,7 +437,7 @@ class DocumentAnalyzer:
 
     def get_llm_payload(
         self,
-        image_input: bytes | str | Path | "np.ndarray",
+        image_input: bytes | str | Path | np.ndarray,
         *,
         preprocess: bool = True,
         preprocess_config: PreprocessConfig | None = None,
@@ -472,7 +470,7 @@ class DocumentAnalyzer:
     # ── Image loading ────────────────────────────────────────────
 
     @staticmethod
-    def _load_image(source: bytes | str | Path | "np.ndarray", cv2, np) -> "np.ndarray":
+    def _load_image(source: bytes | str | Path | np.ndarray, cv2, np) -> np.ndarray:
         """Convert various input types to a BGR NumPy array."""
         if isinstance(source, np.ndarray):
             return source
@@ -493,11 +491,11 @@ class DocumentAnalyzer:
 
     @staticmethod
     def _prepare_image(
-        img: "np.ndarray",
+        img: np.ndarray,
         cfg: PreprocessConfig,
         *,
         debug: bool = False,
-    ) -> tuple["np.ndarray", dict[str, Any]]:
+    ) -> tuple[np.ndarray, dict[str, Any]]:
         """Denoise and binarise a BGR image for better OCR accuracy.
 
         Pipeline:
@@ -574,7 +572,7 @@ class DocumentAnalyzer:
             )
         return self._engine
 
-    def _run_structure(self, img: "np.ndarray") -> list[dict]:
+    def _run_structure(self, img: np.ndarray) -> list[dict]:
         """Execute PPStructure and return the raw result list."""
         engine = self._get_engine()
         try:
@@ -703,9 +701,9 @@ class DocumentAnalyzer:
 
     def _draw_boxes(
         self,
-        img: "np.ndarray",
+        img: np.ndarray,
         blocks: list[DetectedBlock],
-    ) -> "np.ndarray":
+    ) -> np.ndarray:
         """Draw bounding boxes onto a copy of the source image.
 
         Respects :attr:`_ui_style`:

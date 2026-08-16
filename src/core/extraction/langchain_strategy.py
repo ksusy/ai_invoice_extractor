@@ -9,10 +9,8 @@ Extrakční strategie založená na LangChain a LLM s LCEL.
 
 from __future__ import annotations
 
-import json
 import logging
 import time
-from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal
 from uuid import uuid4
@@ -24,15 +22,9 @@ from src.core.vat_utils import (
     apply_vat_derivation_to_invoice,
     apply_vat_inc_correction_to_invoice,
 )
-
-# Fix 3: deterministic amount_inc_vat correction (recompute from ex_vat × VAT
-# rate and replace when the model's value disagrees by > tolerance). Toggle via
-# ENABLE_VAT_INC_CORRECTION so before/after comparisons stay possible.
-ENABLE_VAT_INC_CORRECTION = True
 from src.domain.entities import (
     BillingPeriod,
     CommodityType,
-    CorrectionInfo,
     ElectricityNNData,
     ElectricityVNData,
     ExtractionResult,
@@ -51,6 +43,11 @@ if TYPE_CHECKING:
 
 
 logger = logging.getLogger(__name__)
+
+# Fix 3: deterministic amount_inc_vat correction (recompute from ex_vat × VAT
+# rate and replace when the model's value disagrees by > tolerance). Toggle via
+# ENABLE_VAT_INC_CORRECTION so before/after comparisons stay possible.
+ENABLE_VAT_INC_CORRECTION = True
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -662,7 +659,7 @@ class LangChainExtractionStrategy(BaseExtractionStrategy):
         self._temperature = temperature
         self._use_vision = use_vision
         self._retriever = retriever
-        self._llm: "BaseChatModel | None" = None
+        self._llm: BaseChatModel | None = None
         self._chain: Any = None
 
     @property
@@ -691,7 +688,7 @@ class LangChainExtractionStrategy(BaseExtractionStrategy):
             return "claude-3-5-sonnet-20241022" if self._use_vision else "claude-3-haiku-20240307"
         return "gpt-4.1-mini"
 
-    def _initialize_llm(self) -> "BaseChatModel":
+    def _initialize_llm(self) -> BaseChatModel:
         """Initialize the LangChain LLM client.
 
         Returns:
@@ -709,6 +706,7 @@ class LangChainExtractionStrategy(BaseExtractionStrategy):
         if self._provider == "openai":
             try:
                 from langchain_openai import ChatOpenAI
+
                 from src.config.settings import get_settings
 
                 settings = get_settings()
@@ -729,6 +727,7 @@ class LangChainExtractionStrategy(BaseExtractionStrategy):
         elif self._provider == "anthropic":
             try:
                 from langchain_anthropic import ChatAnthropic
+
                 from src.config.settings import get_settings
 
                 settings = get_settings()
@@ -1257,9 +1256,9 @@ Return a valid JSON object with the extracted data. Use null for missing fields.
         ):
             warnings.append("No supply point identifier found (EAN/EIC)")
 
-        if invoice_data.due_date and invoice_data.issue_date:
-            if invoice_data.due_date < invoice_data.issue_date:
-                warnings.append("Due date is before issue date")
+        if (invoice_data.due_date and invoice_data.issue_date
+                and invoice_data.due_date < invoice_data.issue_date):
+            warnings.append("Due date is before issue date")
 
         if invoice_data.is_cross_year():
             warnings.append("Billing period spans multiple years (cross-year invoice)")

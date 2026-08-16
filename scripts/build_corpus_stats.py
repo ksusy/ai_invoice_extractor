@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Agregace referenčního vzorku dokumentů z KEM pro kapitolu 3 práce.
 

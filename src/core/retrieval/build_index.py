@@ -22,6 +22,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 
+# Importy záměrně až zde — musí následovat po úpravě sys.path výše.
+# ruff: noqa: E402
+
 import numpy as np
 import pandas as pd
 import pytesseract
@@ -116,8 +119,8 @@ def format_example(row: pd.Series) -> str:
 
 def ocr_pdf(pdf_path: Path) -> str:
     """OCR a PDF via PyMuPDF + pytesseract; return up to OCR_CHARS chars of plain text."""
-    import fitz
     import cv2
+    import fitz
     import numpy as np
     import pytesseract
     from PIL import Image

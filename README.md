@@ -215,11 +215,15 @@ python scripts/run_ds1_final.py --limit 20   # zkušební běh
 python scripts/build_thesis_datasets.py  # přepočet podkladů pro notebooky
 ```
 
-## Testy
+## Kvalita kódu
 
 ```bash
-pytest
+pip install -e ".[dev]"
+ruff check src/ tests/ scripts/     # lint
+pytest                              # 76 testů
 ```
+
+Obojí hlídá i [CI](.github/workflows/ci.yml) při každém pushi.
 
 ## Limity
 

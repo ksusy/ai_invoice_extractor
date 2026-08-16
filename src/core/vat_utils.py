@@ -285,7 +285,7 @@ def derive_missing_amounts(
     return amount_ex_vat, amount_inc_vat, False  # unreachable
 
 
-def apply_vat_derivation_to_invoice(invoice_data: "InvoiceData") -> tuple["InvoiceData", bool]:  # noqa: F821
+def apply_vat_derivation_to_invoice(invoice_data: InvoiceData) -> tuple[InvoiceData, bool]:  # noqa: F821
     """Apply DPH amount derivation to an InvoiceData object in-place.
 
     Derives total_amount_ex_vat ↔ total_amount_inc_vat at invoice level.
@@ -354,10 +354,10 @@ def correct_amount_inc_vat(
 
 
 def apply_vat_inc_correction_to_invoice(
-    invoice_data: "InvoiceData",  # noqa: F821
+    invoice_data: InvoiceData,  # noqa: F821
     enabled: bool = True,
     tolerance: float = VAT_INC_TOLERANCE_CZK,
-) -> tuple["InvoiceData", dict | None]:  # noqa: F821
+) -> tuple[InvoiceData, dict | None]:  # noqa: F821
     """Apply :func:`correct_amount_inc_vat` to an InvoiceData in place.
 
     Uses ``issue_date`` (falling back to ``period.period_from``) to pick the VAT

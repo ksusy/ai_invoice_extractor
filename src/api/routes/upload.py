@@ -13,11 +13,11 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core import ProcessingOrchestrator, ProcessingStatus, create_orchestrator
+from src.config.settings import get_settings
+from src.core import create_orchestrator
 from src.core.classification import DocumentKind
 from src.domain.constants import SUPPORTED_FILE_EXTENSIONS
 from src.infrastructure.db.database import get_async_session
-from src.config.settings import get_settings
 
 router = APIRouter(prefix="/upload", tags=["upload"])
 logger = logging.getLogger(__name__)
@@ -71,7 +71,7 @@ def _validate_file_type(content_type: str | None, filename: str | None) -> None:
 
     raise HTTPException(
         status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-        detail=f"Unsupported file type. Allowed: PDF, PNG, JPEG, TIFF, BMP",
+        detail="Unsupported file type. Allowed: PDF, PNG, JPEG, TIFF, BMP",
     )
 
 
@@ -138,12 +138,12 @@ async def upload_invoice(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e),
-        )
+        ) from e
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Processing error: {str(e)}",
-        )
+            detail=f"Processing error: {e}",
+        ) from e
 
 
 @router.post("/batch", status_code=status.HTTP_202_ACCEPTED, response_model=BatchUploadResponse)
@@ -222,6 +222,7 @@ async def get_upload_status(
 
     # Fetch transaction from DB for filename
     from sqlalchemy import select
+
     from src.infrastructure.db.models import Transaction
 
     result = await session.execute(

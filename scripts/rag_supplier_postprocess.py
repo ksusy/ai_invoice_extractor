@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """RAG-like fuzzy-matching post-processing pro pole `supplier`.
 
 Strategie 2 (Vision-LLM, gpt-4.1-mini), dataset DS2.

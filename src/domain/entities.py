@@ -13,8 +13,7 @@ from __future__ import annotations
 import re
 from datetime import date
 from decimal import Decimal
-from enum import Enum
-
+from enum import StrEnum
 from uuid import UUID, uuid4
 
 from pydantic import (
@@ -24,7 +23,6 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-
 
 # ════════════════════════════════════════════════════════════════════════════
 # HELPER FUNCTIONS
@@ -162,11 +160,11 @@ def clean_consumption_point_code(raw: str | None) -> str | None:
     cleaned = re.sub(r"[^A-Za-z0-9]", "", s)
     return cleaned or None
 
-## варто зробити для кожної комодити окремо, - тому що комжна комодита має свій специфічний формат й не хочемо компроміси 
+## варто зробити для кожної комодити окремо, - тому що комжна комодита має свій специфічний формат й не хочемо компроміси
 # Електрина - містить 18 знаків, тільки цифри й починається на 859 (код Чехії)
 # Плин - 16 znaků (kombinace čísel a písmen), v ČR vždy začíná 27ZG.
 # вода: Formát: Obvykle se jedná o kombinaci čísel, někdy i písmen, v závislosti na konkrétním dodavateli vody.
-# тепло = не знаю формат 
+# тепло = не знаю формат
 
 def clean_tax_id(raw: str | int | None) -> str | None:
     """Normalise Czech IČO (identification number).
@@ -224,7 +222,7 @@ def validate_eic_gas(eic: str | None) -> str | None:
 # ════════════════════════════════════════════════════════════════════════════
 
 
-class CommodityType(str, Enum):
+class CommodityType(StrEnum):
     """Supported commodity (utility) types."""
 
     ELEKTRINA_NN = "elektrina_nn"  # Electricity – low voltage
@@ -235,7 +233,7 @@ class CommodityType(str, Enum):
     VODA = "voda"                 # Water
 
 
-class InvoiceType(str, Enum):
+class InvoiceType(StrEnum):
     """Classification of invoice purpose."""
 
     REGULAR = "regular"
@@ -353,7 +351,7 @@ class BillingPeriod(CzechNumericModel):
         return result
 
     @model_validator(mode="after")
-    def validate_period(self) -> "BillingPeriod":
+    def validate_period(self) -> BillingPeriod:
         """Ensure period_from is before or equal to period_to."""
         if self.period_from > self.period_to:
             raise ValueError(
@@ -395,7 +393,7 @@ class ElectricityNNData(CzechNumericModel):
     Czech field mapping:
         - spotreba_nt -> consumption_low_tariff
         - spotreba_vt -> consumption_high_tariff
-        - jistic -> circuit_breaker_value - не потріьно, видалити, за потреби будемо розширювати потім б чи можна зберігати, але не буде надсилатись потім на ендпоінт 
+        - jistic -> circuit_breaker_value - не потріьно, видалити, за потреби будемо розширювати потім б чи можна зберігати, але не буде надсилатись потім на ендпоінт
         - distribucni_tarif -> distribution_tariff - те саме що й вище, видалити, за потреби будемо розширювати потімб чи можна зберігати, але не буде надсилатись потім на ендпоінт
     """
 
@@ -411,20 +409,20 @@ class ElectricityNNData(CzechNumericModel):
     meter_reading_end: float | None = None # не потрібне
 
     # Technical
-    distribution_tariff: str | None = None  # distribucni_tarif (D01d, D02d, etc.) не потрібне 
+    distribution_tariff: str | None = None  # distribucni_tarif (D01d, D02d, etc.) не потрібне
     circuit_breaker_value: float | None = None  # jistic (A) не потрібне
 
     # Amounts (CZK)
     amount_ex_vat: float | None = None   # castka_bez_dph - у преходових фактур важлива щоб тут була частка за окремі періоди, будуть два записи в базі даних, на два періоди й ця частка має бути на два різних періоди
     amount_inc_vat: float | None = None  # castka_s_dph - у преходових фактур важлива щоб тут була частка за окремі періоди, будуть два записи в базі даних, на два періоди й ця частка має бути на два різних періоди
 
-    # Component breakdown - не потрібно для нн 
+    # Component breakdown - не потрібно для нн
     supply_charge: float | None = None        # silová elektřina
     distribution_charge: float | None = None  # distribuce
     system_services: float | None = None      # systémové služby
     renewable_energy_fee: float | None = None # POZE
 
-    # а тут не вистачає doklad_cislo, kod_odberne_misto, ico_odberatel, ico_dodavatel, flag opravna, prechodova , datum_uzp	datetime, datum_vystaveni	datetime,datum_splatnosti	datetime, nazev_souboru	varchar(255)б чи це тільки для специфічних полів тут? 
+    # а тут не вистачає doklad_cislo, kod_odberne_misto, ico_odberatel, ico_dodavatel, flag opravna, prechodova , datum_uzp	datetime, datum_vystaveni	datetime,datum_splatnosti	datetime, nazev_souboru	varchar(255)б чи це тільки для специфічних полів тут?
 
     @field_validator(
         "consumption_low_tariff",
@@ -814,7 +812,7 @@ class InvoiceData(CzechNumericModel):
     is_transitional: bool = False  # prechodova_faktura
 
     # Supply point
-    supply_point: SupplyPoint = Field(default_factory=SupplyPoint) 
+    supply_point: SupplyPoint = Field(default_factory=SupplyPoint)
 
     # Billing period (main period)
     period: BillingPeriod | None = None
@@ -840,7 +838,7 @@ class InvoiceData(CzechNumericModel):
     advance_payment: float | None = None       # zaplacene_zalohy
     amount_to_pay: float | None = None         # k_uhrade (= total_inc_vat - advance_payment)
     # Correction info (if is_correction=True)
-    correction_info: CorrectionInfo | None = None 
+    correction_info: CorrectionInfo | None = None
 
     # Commodity-specific details (One-to-Many for transitional invoices)
     electricity_nn_details: list[ElectricityNNData] = Field(default_factory=list)
@@ -885,9 +883,7 @@ class InvoiceData(CzechNumericModel):
         if s in ("true", "1", "yes", "y"):
             return True
         # Czech keywords that indicate correction
-        if "oprav" in s or "oprava" in s or "opravn" in s:
-            return True
-        return False
+        return bool("oprav" in s or "oprava" in s or "opravn" in s)
 
     @field_validator(
         "total_amount_ex_vat",
@@ -903,7 +899,7 @@ class InvoiceData(CzechNumericModel):
         return clean_czech_number(v)
 
     @model_validator(mode="after")
-    def set_invoice_type_flags(self) -> "InvoiceData":
+    def set_invoice_type_flags(self) -> InvoiceData:
         """Synchronize invoice_type with boolean flags."""
         if self.is_correction:
             self.invoice_type = InvoiceType.CORRECTION

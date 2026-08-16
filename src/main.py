@@ -7,8 +7,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from src.api.routes.upload import router as upload_router
 from src.api.routes.results import router as results_router
+from src.api.routes.upload import router as upload_router
 from src.config.settings import get_settings
 
 logger = logging.getLogger(__name__)

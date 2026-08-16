@@ -8,12 +8,11 @@ This agent can answer natural language questions about:
 
 from __future__ import annotations
 
-from langchain_community.utilities import SQLDatabase
 from langchain.agents import create_sql_agent
 from langchain.agents.agent_types import AgentType
+from langchain_community.utilities import SQLDatabase
 
 from src.config.settings import get_settings
-
 
 # Tables the agent is allowed to query (read-only)
 ALLOWED_TABLES = ["transactions", "ocr_results", "extraction_results"]
@@ -169,7 +168,7 @@ class AnalyticsSQLAgent:
 
 COMMON_QUERIES = {
     "error_summary": """
-        SELECT 
+        SELECT
             status,
             COUNT(*) as count,
             ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) as percentage
@@ -179,7 +178,7 @@ COMMON_QUERIES = {
     """,
 
     "common_errors": """
-        SELECT 
+        SELECT
             error_message,
             COUNT(*) as occurrences
         FROM transactions
@@ -190,7 +189,7 @@ COMMON_QUERIES = {
     """,
 
     "frequently_corrected_fields": """
-        SELECT 
+        SELECT
             field_name,
             COUNT(*) as correction_count
         FROM extraction_results,
@@ -202,7 +201,7 @@ COMMON_QUERIES = {
     """,
 
     "ocr_engine_comparison": """
-        SELECT 
+        SELECT
             engine_name,
             COUNT(*) as sample_size,
             ROUND(AVG(confidence)::numeric, 3) as avg_confidence,
@@ -216,7 +215,7 @@ COMMON_QUERIES = {
     """,
 
     "extraction_strategy_comparison": """
-        SELECT 
+        SELECT
             strategy_name,
             model_name,
             COUNT(*) as sample_size,
@@ -232,7 +231,7 @@ COMMON_QUERIES = {
     """,
 
     "daily_processing_volume": """
-        SELECT 
+        SELECT
             DATE(created_at) as date,
             COUNT(*) as total,
             SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,

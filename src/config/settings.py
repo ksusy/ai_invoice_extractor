@@ -6,21 +6,21 @@ overridden by real environment variables at runtime.
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 from functools import lru_cache
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class PrintMode(str, Enum):
+class PrintMode(StrEnum):
     """Toggle between color and grayscale output for graphs/plots."""
 
     COLOR = "color"
     GRAYSCALE = "grayscale"
 
 
-class LogLevel(str, Enum):
+class LogLevel(StrEnum):
     DEBUG = "DEBUG"
     INFO = "INFO"
     WARNING = "WARNING"

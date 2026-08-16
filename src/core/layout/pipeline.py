@@ -333,7 +333,7 @@ class LayoutPipeline:
 
         # Cluster lines into paragraph blocks (larger gap threshold)
         para_gap = self.row_gap_px * 3
-        line_y_centres = [(l[1] + l[3]) // 2 for l in lines]
+        line_y_centres = [(radek[1] + radek[3]) // 2 for radek in lines]
         para_clusters  = _cluster_by_axis(line_y_centres, gap=para_gap)
 
         regions: list[DetectedRegion] = []
@@ -342,12 +342,12 @@ class LayoutPipeline:
 
         for cluster in para_clusters:
             para_lines = [lines[i] for i in cluster]
-            text  = "\n".join(l[4] for l in para_lines)
-            x1    = min(l[0] for l in para_lines)
-            y1    = min(l[1] for l in para_lines)
-            x2    = max(l[2] for l in para_lines)
-            y2    = max(l[3] for l in para_lines)
-            conf  = float(np.mean([l[5] for l in para_lines]))
+            text  = "\n".join(radek[4] for radek in para_lines)
+            x1    = min(radek[0] for radek in para_lines)
+            y1    = min(radek[1] for radek in para_lines)
+            x2    = max(radek[2] for radek in para_lines)
+            y2    = max(radek[3] for radek in para_lines)
+            conf  = float(np.mean([radek[5] for radek in para_lines]))
             y_mid = (y1 + y2) / 2
 
             if y_mid < header_threshold:
@@ -430,7 +430,4 @@ def _box_inside_any(
     pts = np.array(quad, dtype=np.float32)
     cx  = float(pts[:, 0].mean())
     cy  = float(pts[:, 1].mean())
-    for x1, y1, x2, y2 in regions:
-        if x1 <= cx <= x2 and y1 <= cy <= y2:
-            return True
-    return False
+    return any(x1 <= cx <= x2 and y1 <= cy <= y2 for x1, y1, x2, y2 in regions)

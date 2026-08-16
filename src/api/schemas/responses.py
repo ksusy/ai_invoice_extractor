@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -12,7 +11,7 @@ from src.domain.entities import InvoiceMetadata
 
 
 def _utcnow() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class TaskAccepted(BaseModel):
@@ -31,7 +30,7 @@ class ExtractionResponse(BaseModel):
     filename: str
     strategy_used: str
     confidence: float
-    metadata: Optional[InvoiceMetadata] = None
+    metadata: InvoiceMetadata | None = None
     warnings: list[str] = Field(default_factory=list)
     processed_at: datetime = Field(default_factory=_utcnow)
 

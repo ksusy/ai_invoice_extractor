@@ -15,8 +15,7 @@ from __future__ import annotations
 import hashlib
 import logging
 import time
-from dataclasses import dataclass, field
-from typing import Optional
+from dataclasses import dataclass
 
 from src.core.classification.base import DocumentKind
 
@@ -83,7 +82,7 @@ class AdaptiveThresholds:
     def record_classification(
         self,
         predicted: DocumentKind,
-        ground_truth: Optional[DocumentKind] = None,
+        ground_truth: DocumentKind | None = None,
     ) -> None:
         """Record a classification result for metric updates.
 
@@ -151,7 +150,7 @@ class ClassificationCache:
         """Get SHA256 hash of file for caching."""
         return hashlib.sha256(file_bytes).hexdigest()
 
-    def get(self, file_hash: str) -> Optional[CachedClassificationResult]:
+    def get(self, file_hash: str) -> CachedClassificationResult | None:
         """Retrieve cached classification result if valid.
 
         Args:
