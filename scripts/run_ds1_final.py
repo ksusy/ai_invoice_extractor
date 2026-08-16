@@ -49,7 +49,13 @@ warnings.filterwarnings("ignore")
 ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(ROOT / ".env")
 
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+from src.core.ocr_engine.tesseract_setup import nastav_tesseract
+
+# Cesta k Tesseractu se zjišťuje za běhu — na Linuxu, macOS i v kontejneru bývá
+# na PATH, na Windows v Program Files. Lze ji vynutit proměnnou TESSERACT_CMD.
+if nastav_tesseract() is None:
+    print("VAROVANI: Tesseract nebyl nalezen. Nastavte TESSERACT_CMD v .env "
+          "nebo doplnte tesseract na PATH.")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # KONFIGURACE

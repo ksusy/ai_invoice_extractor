@@ -33,10 +33,12 @@ from openai import OpenAI
 
 load_dotenv(ROOT / ".env")
 
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+from src.core.ocr_engine.tesseract_setup import nastav_tesseract
+
+nastav_tesseract()
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-DS1_DIR    = ROOT / "data" / "ds1_clean"
+DS1_DIR    = ROOT / "data" / "ds1"
 DS2_DIR    = ROOT / "data" / "ds2"
 INDEX_DIR  = ROOT / "data" / "retrieval"
 INDEX_PATH = INDEX_DIR / "faiss.index"
@@ -122,7 +124,6 @@ def ocr_pdf(pdf_path: Path) -> str:
     import cv2
     import fitz
     import numpy as np
-    import pytesseract
     from PIL import Image
 
     doc = fitz.open(str(pdf_path))

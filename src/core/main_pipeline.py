@@ -537,8 +537,10 @@ class ProcessingOrchestrator:
         Args:
             session: Async database session. If None, sessions are created
                      per operation using context managers.
-            extraction_strategy: Primary text-based extraction strategy.
-                                 Defaults to regex strategy.
+            extraction_strategy: Primary text-based extraction strategy. When
+                                 omitted, the LLM strategy is used if an OpenAI
+                                 key is configured; otherwise the pipeline runs
+                                 in degraded regex mode (see _select_strategy).
             vision_strategy: Optional vision LLM fallback used when text
                              extraction confidence is below ACCEPTANCE_THRESHOLD.
         """
@@ -546,7 +548,11 @@ class ProcessingOrchestrator:
         self._ingestion_service = create_ingestion_service(session)
         self._classifier = create_pdf_classifier(session)
         self._ocr_engine = create_tesseract_engine()
-        self._extraction_strategy = extraction_strategy or create_regex_strategy()
+        if extraction_strategy is not None:
+            self._extraction_strategy = extraction_strategy
+            self._degraded_mode = False
+        else:
+            self._extraction_strategy, self._degraded_mode = _select_strategy()
         self._vision_strategy = vision_strategy
         self._transitional_analyser = create_transitional_analyser()
         self._correction_analyser = create_correction_analyser()
@@ -746,6 +752,11 @@ class ProcessingOrchestrator:
                     errors=["Extraction timed out after 180s"],
                 )
             extraction_duration_ms = (time.time() - extraction_start) * 1000
+
+            # Degradovaný režim se musí projevit ve výstupu, ne jen v logu —
+            # jinak vypadá výsledek z regulárních výrazů stejně jako plnohodnotný.
+            if self._degraded_mode:
+                extraction_result.warnings.append(DEGRADED_MODE_WARNING)
 
             # Save extraction result to database
             await self._save_extraction_result(
@@ -1399,6 +1410,10 @@ class ProcessingOrchestrator:
                     errors=["Extraction timed out after 180s"],
                 )
             ext_duration = (time.time() - ext_start) * 1000
+
+            if self._degraded_mode:
+                extraction_result.warnings.append(DEGRADED_MODE_WARNING)
+
             await self._save_extraction_result(
                 tx.id, extraction_result, ocr_result_id=ocr_db_id, duration_ms=ext_duration,
             )
@@ -1673,6 +1688,46 @@ class ProcessingOrchestrator:
 
         async with self._get_session() as session:
             await session.execute(stmt)
+
+
+#: Text připojený k výsledku, běží-li pipeline bez jazykového modelu.
+DEGRADED_MODE_WARNING = (
+    "DEGRADED MODE: extraction ran on the regex baseline because no OpenAI API "
+    "key is configured. Accuracy is far below the evaluated pipeline — field "
+    "values are unreliable and must not be imported without review. "
+    "Set OPENAI_API_KEY to enable the LLM extraction."
+)
+
+
+def _select_strategy() -> tuple[BaseExtractionStrategy, bool]:
+    """Zvolí extrakční strategii podle dostupnosti jazykového modelu.
+
+    Vrací dvojici (strategie, degradovaný_režim). Bez nastaveného klíče se
+    pipeline nezastaví — spadne zpět na regulární výrazy, protože jinak by
+    nešlo systém vůbec vyzkoušet. Kvalita je ale řádově nižší než u vyhodnocené
+    pipeline, takže se to hlásí do logu i do výstupu; tiše se to nestane.
+
+    Klíč se kontroluje předem záměrně: jazykový model se v LangChain strategii
+    vytváří až při prvním volání, takže samotné sestavení strategie by chybějící
+    klíč neodhalilo a selhalo by až uprostřed zpracování dokumentu.
+    """
+    from src.config.settings import get_settings
+
+    if not get_settings().openai_api_key:
+        logger.warning(
+            "OPENAI_API_KEY is not configured — falling back to the regex "
+            "baseline. %s", DEGRADED_MODE_WARNING,
+        )
+        return create_regex_strategy(), True
+
+    try:
+        return create_langchain_strategy(provider="openai"), False
+    except Exception as e:  # nedostupná knihovna langchain-openai
+        logger.warning(
+            "OpenAI extraction strategy unavailable (%s). Falling back to the "
+            "regex baseline. %s", e, DEGRADED_MODE_WARNING,
+        )
+        return create_regex_strategy(), True
 
 
 def create_orchestrator(

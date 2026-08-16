@@ -133,6 +133,17 @@ pip install -e ".[pipeline,llm]"
 cp .env.example .env            # doplňte OPENAI_API_KEY
 ```
 
+> **Bez klíče `OPENAI_API_KEY` běží pipeline v degradovaném režimu.** Místo
+> jazykového modelu se použije záložní extrakce regulárními výrazy — ta slouží
+> jako srovnávací základ, ne jako produkční řešení. Vrací mnohem nižší jistotu,
+> často `UNKNOWN` místo čísla faktury a zaměňuje odběratele s dodavatelem.
+> Systém na to upozorní v logu i ve výstupním poli `warnings`; výsledky z tohoto
+> režimu nelze importovat bez kontroly.
+
+Cestu k Tesseractu si systém zjistí sám — na Linuxu, macOS i v kontejneru
+z `PATH`, na Windows z obvyklého umístění instalátoru. Vynutit ji lze proměnnou
+`TESSERACT_CMD`.
+
 Navíc je potřeba **Tesseract 5 s českým jazykovým balíkem**:
 
 ```bash
