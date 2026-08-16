@@ -113,6 +113,17 @@ docker compose up notebooks     # JupyterLab s experimenty → http://localhost:
 docker compose up api           # REST API                 → http://localhost:8000/docs
 ```
 
+Notebooky žádnou databázi nepotřebují. API si spolu se sebou spustí PostgreSQL,
+protože do ní ukládá průběh zpracování. Kolidují-li porty s něčím na hostiteli:
+
+```bash
+API_PORT=8010 NOTEBOOK_PORT=8899 docker compose up api
+```
+
+> **REST API je demonstrační integrace, ne vyhodnocená pipeline.** Výsledky
+> uvedené v práci pochází ze `scripts/run_ds1_final.py`; API používá vlastní,
+> jednodušší extrakční cestu a jeho přesnost nebyla měřena.
+
 ### Lokálně
 
 Pro pouhé prohlédnutí a spuštění experimentů stačí vědecký stack — API klíč,

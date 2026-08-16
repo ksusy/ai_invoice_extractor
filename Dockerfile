@@ -28,14 +28,16 @@ WORKDIR /app
 # Závislosti zvlášť, aby se vrstva s instalací neinvalidovala při každé změně kódu
 COPY pyproject.toml README.md ./
 COPY src/__init__.py ./src/
-RUN pip install --upgrade pip && pip install -e ".[notebooks,pipeline,llm]"
+RUN pip install --upgrade pip && pip install -e ".[notebooks,pipeline,llm,dev]"
 
 COPY . .
 
 EXPOSE 8000 8888
 
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+# Odstranění CR: při sestavení na Windows by jinak shebang zněl "bash"
+# a kontejner by skončil hláškou "/usr/bin/env: 'bash': No such file".
+RUN sed -i 's/$//' /usr/local/bin/entrypoint.sh && chmod +x /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["notebooks"]

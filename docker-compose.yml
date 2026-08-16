@@ -3,13 +3,18 @@
 #   docker compose up notebooks   → JupyterLab na http://localhost:8888
 #   docker compose up api         → REST API na  http://localhost:8000/docs
 #
+# Porty lze změnit, kolidují-li s něčím na hostiteli:
+#   API_PORT=8010 NOTEBOOK_PORT=8899 docker compose up api
+#
+# Notebooky žádnou databázi nepotřebují, API ano — spustí se proto i s ní.
+#
 services:
   notebooks:
     build: .
     image: ai-invoice-extractor
     command: ["notebooks"]
     ports:
-      - "8888:8888"
+      - "${NOTEBOOK_PORT:-8888}:8888"
     volumes:
       # Změny v notebocích a datech se propisují na hostitele
       - ./experiments:/app/experiments
@@ -20,9 +25,38 @@ services:
     image: ai-invoice-extractor
     command: ["api"]
     ports:
-      - "8000:8000"
+      - "${API_PORT:-8000}:8000"
     env_file:
-      - .env
+      # Bez .env se služba spustí také — pipeline pak běží v degradovaném
+      # režimu na regulárních výrazech a upozorní na to v logu.
+      - path: .env
+        required: false
+    environment:
+      # Uvnitř sítě compose se databáze jmenuje "db", nikoli localhost.
+      # Případná hodnota z .env se tímto záměrně přebíjí.
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/invoices
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
       - ./src:/app/src
       - ./data:/app/data
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: invoices
+    # Port se ven nevystavuje — databáze slouží jen API uvnitř sítě compose
+    # a nekoliduje tak s PostgreSQL běžícím na hostiteli.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d invoices"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:

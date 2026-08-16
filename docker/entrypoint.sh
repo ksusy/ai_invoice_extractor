@@ -18,7 +18,8 @@ case "${1:-notebooks}" in
     exec pytest
     ;;
   shell)
-    exec /bin/bash
+    shift
+    exec /bin/bash "$@"
     ;;
   *)
     exec "$@"
